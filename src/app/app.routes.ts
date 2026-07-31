@@ -28,4 +28,8 @@ export const routes: Routes = [
         redirectTo: "Home",
         pathMatch: "full",
     },
+    {
+        path: '**',
+        redirectTo: "Home",
+    }
 ];

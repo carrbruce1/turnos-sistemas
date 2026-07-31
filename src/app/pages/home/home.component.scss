@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Oswald', sans-serif;
+  background-color: #0d0d0d;
+  color: #ffffff;
+}
+
+/* --- HEADER --- */
+header {
+  width: 100%;
+  background-color: #f4f4f4;
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .nav-bar nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .logo-img img {
+      height: 35px;
+      width: auto;
+      display: block;
+    }
+
+    .contenido-nav h2 {
+      color: #111111;
+      font-size: 1.3rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/* --- HERO --- */
+.hero-contenido {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  min-height: 450px;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+    url('/img/barber2.jfif');
+  background-size: cover;
+  background-position: center;
+
+  .hero-overlay {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      color: white;
+
+      @media (max-width: 768px) {
+        font-size: 1.8rem;
+      }
+    }
+
+    .btn-reservar {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #f3efe6;
+      color: #000000;
+      padding: 12px 36px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #ffffff;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* --- SECCIÓN FORMULARIO + CALENDARIO --- */
+.formulario-contenido {
+  padding: 80px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  .container-reserva {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+
+    @media (max-width: 850px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Estilos compartidos para las 2 tarjetas claras
+  .form-card, 
+  .calendario-reservas {
+    background-color: #f4f4f4;
+    color: #111111;
+    padding: 35px 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #111111;
+      padding-bottom: 8px;
+    }
+  }
+
+  /* --- ESTILOS DEL FORMULARIO --- */
+  .form-card {
+    display: flex;
+    flex-direction: column;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+      }
+
+      input, 
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #111111;
+        background-color: #ffffff;
+        font-family: inherit;
+        font-size: 0.95rem;
+        color: #111111;
+        outline: none;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+          border-width: 2px;
+        }
+      }
+
+      select {
+        cursor: pointer;
+      }
+    }
+
+    .btn-submit {
+      margin-top: 10px;
+      background-color: #111111;
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #333333;
+      }
+    }
+  }
+
+  /* --- ÁREA CONTENEDORA DEL CALENDARIO --- */
+  .calendario-reservas {
+    min-height: 400px;
+
+    .calendario-placeholder {
+      padding: 20px 0;
+      color: #666666;
+    }
+  }
+}
+
+
+/* --- FOOTER --- */
+.footer-contenido {
+  width: 100%;
+  background-color: #000000; // Fondo negro acorde al tema
+  border-top: 1px solid #222222;
+  padding: 40px 20px 20px;
+  color: #ffffff;
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  /* Redes sociales */
+  .contenido-redes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    a {
+      display: inline-block;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+
+      img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        // Filtro para mantenerlos en blanco pulido si tus pngs no son blancos
+        filter: brightness(0) invert(1); 
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        opacity: 0.8;
+      }
+    }
+  }
+
+  /* Info y Branding */
+  .contenido-info-footer {
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: #f4f4f4;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: #888888;
+      letter-spacing: 0.5px;
+
+      span {
+        color: #ffffff;
+        font-weight: 500;
+      }
+    }
+  }
+}

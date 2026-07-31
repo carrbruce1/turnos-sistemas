@@ -1,0 +1,194 @@
+@use 'sass:color';
+
+$primary-gold: #c5a059;      
+$bg-main: #0a0a0a;           
+$card-bg: #121212;           
+$text-light: #f1f1f1;
+$text-muted: #666666;
+$error-color: #ff5252;
+$border-color: #1e1e1e;
+
+// Header limpio con Barbería San Lorenzo
+.main-header {
+  background-color: transparent;
+  padding: 1.8rem 2rem;
+  border-bottom: 1px solid $border-color;
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .brand-title {
+      color: $primary-gold;
+      font-size: 1.3rem;
+      font-weight: 500;
+      letter-spacing: 4px;
+      margin: 0;
+      text-transform: uppercase;
+      text-align: center;
+    }
+  }
+}
+
+// Contenido Principal
+main {
+  background-color: $bg-main;
+  min-height: calc(100vh - 150px); // Descuenta header y footer
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.formulario-contenido {
+  width: 100%;
+  max-width: 360px;
+}
+
+.form-card {
+  background-color: $card-bg;
+  padding: 3.2rem 2.2rem;
+  border-radius: 16px;
+  border: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    color: $text-light;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 2.5px;
+    margin: 0 0 0.4rem 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    color: $text-muted;
+    font-size: 0.75rem;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 2.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.8rem;
+
+    label {
+      color: $text-muted;
+      font-size: 0.68rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #282828;
+      border-radius: 0;
+      padding: 0.6rem 0;
+      color: $text-light;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+
+      &::placeholder {
+        color: #333;
+      }
+
+      &:focus {
+        border-bottom-color: $primary-gold;
+      }
+
+      &.is-invalid {
+        border-bottom-color: $error-color;
+      }
+    }
+
+    .error-msg {
+      color: $error-color;
+      font-size: 0.7rem;
+      margin-top: 0.4rem;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .error-banner {
+    background-color: rgba(255, 82, 82, 0.08);
+    color: $error-color;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-submit {
+    margin-top: 0.8rem;
+    background-color: $primary-gold;
+    color: #050505;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.95rem;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($primary-gold, $lightness: 6%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(197, 160, 89, 0.2);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Footer con la firma de BC Studio
+.main-footer {
+  padding: 1.2rem 2rem;
+  border-top: 1px solid $border-color;
+  background-color: $bg-main;
+
+  .footer-brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    color: $text-muted;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    .footer-logo {
+      height: 20px;
+      width: auto;
+      opacity: 0.7;
+    }
+
+    strong {
+      color: $primary-gold;
+      font-weight: 500;
+    }
+  }
+}

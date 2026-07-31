@@ -1,0 +1,61 @@
+<header class="main-header">
+  <div class="header-content">
+    <h1 class="brand-title">BARBERIA SAN LORENZO</h1>
+  </div>
+</header>
+
+<main>
+  <section class="formulario-contenido">
+    <div class="contenido-reserva">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-card">
+        <h3>Iniciar Sesión</h3>
+        <p class="subtitle">Acceso exclusivo para personal</p>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="correo@ejemplo.com"
+            [class.is-invalid]="f('email')?.invalid && f('email')?.touched"
+          >
+          @if (f('email')?.invalid && f('email')?.touched) {
+            <span class="error-msg">Ingrese un email válido</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            placeholder="••••••••"
+            [class.is-invalid]="f('password')?.invalid && f('password')?.touched"
+          >
+          @if (f('password')?.invalid && f('password')?.touched) {
+            <span class="error-msg">La contraseña es requerida</span>
+          }
+        </div>
+
+        @if (errorLogin) {
+          <div class="error-banner">
+            {{ errorLogin }}
+          </div>
+        }
+
+        <button type="submit" [disabled]="cargando" class="btn-submit">
+          {{ cargando ? 'Iniciando sesión...' : 'Ingresar' }}
+        </button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="main-footer">
+  <div class="footer-brand">
+    <img src="img/bcstudio.png" alt="BC Studio Logo" class="footer-logo">
+    <span>DESARROLLADO POR <strong>BC STUDIO</strong></span>
+  </div>
+</footer>

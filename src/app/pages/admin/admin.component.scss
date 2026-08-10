@@ -684,3 +684,120 @@ $wpp-color: #25d366;
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
+
+
+/* ==========================================
+   ADAPTATIVO / RESPONSIVE PARA CELULAR
+   ========================================== */
+@media (max-width: 768px) {
+  // Layout general
+  .dashboard-container {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  // Sidebar en la parte superior / compacta
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+
+    .menu-top, 
+    .menu-bottom {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      width: auto;
+    }
+
+    button {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.85rem;
+
+      .menu-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  // Contenido principal
+  .main-content {
+    padding: 1.2rem 1rem;
+
+    h2 {
+      font-size: 1.4rem;
+    }
+  }
+
+  // Cuadrícula de tarjetas de estado (En proceso / Cancelados)
+  .cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+
+    .card {
+      padding: 1rem;
+
+      h3 {
+        font-size: 0.9rem;
+      }
+
+      .count {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  // Tarjeta individual de turno
+  .turno-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+
+    .turno-info {
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    // Botones de acción apilados en móvil
+    .turno-acciones {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5rem;
+
+      button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// Ajuste extra para celulares muy pequeños
+@media (max-width: 480px) {
+  .sidebar {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: stretch;
+
+    .menu-top, 
+    .menu-bottom {
+      justify-content: space-around;
+      width: 100%;
+    }
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

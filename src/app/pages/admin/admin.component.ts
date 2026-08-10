@@ -20,7 +20,7 @@ export interface Reserva {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrls: ['./admin.component.scss'] // <-- APLICADA LA CORRECCIÓN ACÁ
 })
 export class AdminComponent implements OnInit {
   private supabaseService = inject(SupabaseService);
@@ -174,7 +174,7 @@ export class AdminComponent implements OnInit {
     this.cambiarEstadoTurno(idTurno, 'rechazado');
   }
 
-  // CONFIRMA EL TURNO Y ABRE WHATSAPP CON EL MENSAJE FORMATAEADO
+  // CONFIRMA EL TURNO Y ABRE WHATSAPP CON EL MENSAJE FORMATEADO
   async confirmarYEnviarWhatsApp(turno: Reserva) {
     if (!turno.telefono_cliente) {
       this.mostrarModal = true;
@@ -185,19 +185,15 @@ export class AdminComponent implements OnInit {
       return;
     }
 
-    // 1. Cambiamos el estado en la base de datos a 'confirmado'
     await this.cambiarEstadoTurno(turno.id, 'confirmado');
 
-    // 2. Limpieza de número (asume formato local / Argentina, agrega 54 si falta)
     let telefono = turno.telefono_cliente.replace(/\D/g, '');
     if (!telefono.startsWith('54')) {
       telefono = `54${telefono}`;
     }
 
-    // 3. Formateo de fecha DD/MM/YYYY
     const fechaFormateada = this.formatearFechaLatina(turno.fecha);
 
-    // 4. Mensaje detallado para el cliente
     const mensaje = `¡Hola *${turno.nombre_cliente || 'Cliente'}*! 👋\n\n` +
                     `Tu turno en *Barbería San Lorenzo* ha sido *CONFIRMADO* 💈✂️\n\n` +
                     `📌 *Detalles de tu cita:*\n` +
@@ -210,7 +206,6 @@ export class AdminComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  // MÉTODO AUXILIAR PARA FORMATEAR LA FECHA YYYY-MM-DD A DD/MM/YYYY
   formatearFechaLatina(fechaStr: string): string {
     if (!fechaStr) return '';
     const partes = fechaStr.split('-');

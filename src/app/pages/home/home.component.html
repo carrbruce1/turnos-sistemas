@@ -65,14 +65,14 @@
             }
           </div>
 
-          <!-- DETALLE DEL TURNO SELECCIONADO (FORMATO LATINO DD/MM/YYYY) -->
+          <!-- DETALLE DEL TURNO SELECCIONADO -->
           <div class="resumen-turno">
             <p><strong>Fecha:</strong> {{ formatearFechaLatina(reservaForm.get('fecha')?.value) || 'No seleccionada' }}</p>
             <p><strong>Hora:</strong> {{ reservaForm.get('hora')?.value || 'No seleccionada' }}</p>
           </div>
         </div>
 
-        <!-- CARD DERECHA: CLON DE GOOGLE APPOINTMENTS -->
+        <!-- CARD DERECHA: SELECTOR DE APPOINTMENTS -->
         <div class="google-appointment-container">
           <div class="appointment-header">
             <h3>Selecciona un horario para la cita</h3>

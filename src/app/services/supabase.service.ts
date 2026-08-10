@@ -55,7 +55,7 @@ export class SupabaseService {
       .from('reservas')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
   }
 
   async actualizarEstadoReserva(id: string | number, nuevoEstado: string) {

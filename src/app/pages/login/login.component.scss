@@ -1,194 +1,324 @@
-@use 'sass:color';
+$bg-app: #f4f5f7;
+$bg-card: #ffffff;
+$bg-input: #f8f9fa;
+$color-primary: #1a1a1a;
+$color-accent: #25d366; // Verde sutil / accent del Home
+$text-main: #222222;
+$text-muted: #6c757d;
+$border-light: #e0e0e0;
+$danger-color: #d93025;
 
-$primary-gold: #c5a059;      
-$bg-main: #0a0a0a;           
-$card-bg: #121212;           
-$text-light: #f1f1f1;
-$text-muted: #666666;
-$error-color: #ff5252;
-$border-color: #1e1e1e;
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: $bg-app;
+  color: $text-main;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
 
-// Header limpio con Barbería San Lorenzo
+/* HEADER - Mismo estilo que la landing */
 .main-header {
-  background-color: transparent;
-  padding: 1.8rem 2rem;
-  border-bottom: 1px solid $border-color;
+  background: $bg-card;
+  border-bottom: 1px solid $border-light;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 
-  .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .brand-title {
-      color: $primary-gold;
-      font-size: 1.3rem;
-      font-weight: 500;
-      letter-spacing: 4px;
-      margin: 0;
-      text-transform: uppercase;
-      text-align: center;
-    }
+  .brand-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: $color-primary;
+    text-transform: uppercase;
   }
 }
 
-// Contenido Principal
+/* CONTENEDOR PRINCIPAL */
 main {
-  background-color: $bg-main;
-  min-height: calc(100vh - 150px); // Descuenta header y footer
+  flex: 1;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 2rem 1rem;
 }
 
 .formulario-contenido {
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
 }
 
+/* TARJETA DE LOGIN - Mismo diseño claro de tarjeta del Home */
 .form-card {
-  background-color: $card-bg;
-  padding: 3.2rem 2.2rem;
+  background: $bg-card;
+  border: 1px solid $border-light;
   border-radius: 16px;
-  border: 1px solid $border-color;
-  display: flex;
-  flex-direction: column;
+  padding: 2.2rem 1.8rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 
   h3 {
-    color: $text-light;
-    font-size: 1.2rem;
-    font-weight: 400;
-    letter-spacing: 2.5px;
-    margin: 0 0 0.4rem 0;
+    margin: 0 0 0.3rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $color-primary;
     text-align: center;
-    text-transform: uppercase;
   }
 
   .subtitle {
+    margin: 0 0 1.8rem;
+    font-size: 0.85rem;
     color: $text-muted;
-    font-size: 0.75rem;
-    font-weight: 300;
     text-align: center;
-    margin-bottom: 2.8rem;
-    letter-spacing: 1px;
+  }
+}
+
+/* FORMULARIO E INPUTS */
+.form-group {
+  margin-bottom: 1.3rem;
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $color-primary;
+    margin-bottom: 0.4rem;
     text-transform: uppercase;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.8rem;
-
-    label {
-      color: $text-muted;
-      font-size: 0.68rem;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
-
-    input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid #282828;
-      border-radius: 0;
-      padding: 0.6rem 0;
-      color: $text-light;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.3s ease;
-
-      &::placeholder {
-        color: #333;
-      }
-
-      &:focus {
-        border-bottom-color: $primary-gold;
-      }
-
-      &.is-invalid {
-        border-bottom-color: $error-color;
-      }
-    }
-
-    .error-msg {
-      color: $error-color;
-      font-size: 0.7rem;
-      margin-top: 0.4rem;
-      letter-spacing: 0.5px;
-    }
-  }
-
-  .error-banner {
-    background-color: rgba(255, 82, 82, 0.08);
-    color: $error-color;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
     letter-spacing: 0.5px;
   }
 
-  .btn-submit {
-    margin-top: 0.8rem;
-    background-color: $primary-gold;
-    color: #050505;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 0.95rem;
-    border: none;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: $bg-input;
+    border: 1px solid $border-light;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    color: $text-main;
+    font-size: 1rem; /* Evita auto-zoom en iPhone */
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
-    &:hover:not(:disabled) {
-      background-color: color.adjust($primary-gold, $lightness: 6%);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(197, 160, 89, 0.2);
+    &::placeholder {
+      color: #aaa;
     }
 
-    &:active:not(:disabled) {
-      transform: translateY(0);
+    &:focus {
+      border-color: $color-primary;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
     }
 
-    &:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
+    &.is-invalid {
+      border-color: $danger-color;
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.1);
+      }
+    }
+  }
+
+  .error-msg {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    color: $danger-color;
+    font-weight: 500;
+  }
+}
+
+/* BOTÓN INICIAR SESIÓN (Estilo Home) */
+.btn-submit {
+  width: 100%;
+  background-color: $color-primary;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s, transform 0.1s;
+  touch-action: manipulation;
+
+  &:hover:not(:disabled) {
+    background-color: #333333;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* OVERLAY Y MODAL (Misma estructura visual que el Home) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 1.2rem;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  animation: scaleUp 0.25s ease-out;
+}
+
+.modal-body {
+  text-align: center;
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0.8rem 0 0.3rem;
+    color: $color-primary;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    color: $color-primary;
+    margin-top: 1rem;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 0.88rem;
+    margin-bottom: 1.4rem;
+  }
+}
+
+/* ICONOS Y SPINNER DEL MODAL */
+.icon-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 1.6rem;
+  font-weight: bold;
+
+  &.exito-icon {
+    background-color: #e6f4ea;
+    color: $color-accent;
+  }
+
+  &.error-icon {
+    background-color: #fce8e6;
+    color: $danger-color;
+  }
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid $color-primary;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-reintentar {
+  width: 100%;
+  background-color: #e0e0e0;
+  color: $color-primary;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #d5d5d5;
+  }
+}
+
+/* FOOTER */
+.main-footer {
+  background: $bg-card;
+  border-top: 1px solid $border-light;
+  padding: 1.2rem 1rem;
+  text-align: center;
+
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    color: $text-muted;
+
+    .footer-logo {
+      height: 20px;
+    }
+
+    strong {
+      color: $color-primary;
     }
   }
 }
 
-// Footer con la firma de BC Studio
-.main-footer {
-  padding: 1.2rem 2rem;
-  border-top: 1px solid $border-color;
-  background-color: $bg-main;
-
-  .footer-brand {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.6rem;
-    color: $text-muted;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-
-    .footer-logo {
-      height: 20px;
-      width: auto;
-      opacity: 0.7;
-    }
-
-    strong {
-      color: $primary-gold;
-      font-weight: 500;
+/* ADAPTACIÓN ESPECÍFICA PARA CELULAR (< 480px) */
+@media (max-width: 480px) {
+  .main-header {
+    padding: 1rem 0.8rem;
+    .brand-title {
+      font-size: 1rem;
     }
   }
+
+  main {
+    padding: 1rem 0.8rem;
+  }
+
+  .form-card {
+    padding: 1.8rem 1.2rem;
+
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .modal-card {
+    padding: 1.6rem 1.2rem;
+  }
+}
+
+/* ANIMACIONES */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }

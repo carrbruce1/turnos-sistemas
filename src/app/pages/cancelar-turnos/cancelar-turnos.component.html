@@ -1,54 +1,14 @@
-<main class="cancelar-container">
-  <div class="card-cancelar">
-    <h2>Cancelar Turno</h2>
+<main class="redirect-container">
+  <div class="card-redirect">
+    <!-- Spinner animado -->
+    <div class="spinner"></div>
 
-    @if (cargando) {
-      <div class="loader">
-        <p>Cargando la información de tu turno...</p>
-      </div>
-    } @else if (errorMensaje) {
-      <div class="mensaje-box error">
-        <p>{{ errorMensaje }}</p>
-        <a routerLink="/" class="btn-volver">Volver al inicio</a>
-      </div>
-    } @else if (mensajeExito) {
-      <div class="mensaje-box exito">
-        <h3>¡Tu turno ha sido cancelado!</h3>
-        <p>El horario ha quedado libre. Gracias por avisarnos.</p>
-        <a routerLink="/" class="btn-volver">Volver al inicio</a>
-      </div>
-    } @else if (turno) {
+    <h2>{{ mensajeEstado }}</h2>
+    <p>{{ subtitulo }}</p>
 
-      @if (turno.estado === 'cancelado' || turno.estado === 'rechazado') {
-        <div class="mensaje-box aviso">
-          <p>Este turno ya se encuentra <strong>{{ turno.estado }}</strong>.</p>
-          <a routerLink="/" class="btn-volver">Volver al inicio</a>
-        </div>
-      } @else {
-        <div class="detalle-turno">
-          <p>¿Estás seguro de que deseas cancelar la siguiente reserva?</p>
-          
-          <div class="info-grid">
-            <p><strong>Cliente:</strong> {{ turno.nombre_cliente }}</p>
-            <p><strong>Servicio:</strong> {{ turno.servicio }}</p>
-            <p><strong>Fecha:</strong> {{ formatearFechaLatina(turno.fecha) }}</p>
-            <p><strong>Hora:</strong> {{ turno.hora }} hs</p>
-          </div>
-
-          <div class="acciones">
-            <button 
-              type="button" 
-              class="btn-cancelar" 
-              [disabled]="procesando" 
-              (click)="confirmarCancelacion()">
-              {{ procesando ? 'CANCELANDO...' : 'CONFIRMAR CANCELACIÓN' }}
-            </button>
-            
-            <a routerLink="/" class="btn-secundario">Conservar Turno</a>
-          </div>
-        </div>
-      }
-
-    }
+    <small class="aviso-manual">
+      ¿No se abrió WhatsApp automáticamente? 
+      <a [href]="'https://wa.me/' + telefonoLocal" target="_blank">Hacé clic acá</a>
+    </small>
   </div>
 </main>

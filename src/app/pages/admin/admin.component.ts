@@ -37,6 +37,12 @@ export class AdminComponent implements OnInit {
   cantidadRechazados = 0;
   searchTerm: string = '';
 
+  // ESTADOS DEL MODAL
+  mostrarModal = false;
+  tipoModal: 'cargando' | 'exito' | 'error' = 'cargando';
+  mensajeModal = '';
+  subtituloModal = '';
+
   async ngOnInit() {
     await Promise.all([
       this.cargarPerfilUsuario(),
@@ -116,24 +122,58 @@ export class AdminComponent implements OnInit {
   }
 
   async cambiarEstadoTurno(idTurno: string | number, nuevoEstado: 'finalizado' | 'rechazado') {
-    const { error } = await this.supabaseService.actualizarEstadoReserva(idTurno, nuevoEstado);
-    if (!error) {
-      await this.cargarTurnos();
+    // 1. Mostrar Spinner
+    this.mostrarModal = true;
+    this.tipoModal = 'cargando';
+    
+    if (nuevoEstado === 'finalizado') {
+      this.mensajeModal = 'Finalizando turno...';
+      this.subtituloModal = 'Actualizando el registro en la base de datos.';
     } else {
-      alert('Error al actualizar el estado del turno.');
+      this.mensajeModal = 'Cancelando turno...';
+      this.subtituloModal = 'Procesando el cambio de estado.';
+    }
+    this.cdr.detectChanges();
+
+    try {
+      const { error } = await this.supabaseService.actualizarEstadoReserva(idTurno, nuevoEstado);
+
+      if (!error) {
+        await this.cargarTurnos();
+        
+        // 2. Éxito
+        this.tipoModal = 'exito';
+        this.mensajeModal = nuevoEstado === 'finalizado' ? '¡Turno finalizado!' : 'El turno fue cancelado/rechazado.';
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.cerrarModal();
+        }, 1200);
+
+      } else {
+        throw error;
+      }
+    } catch (err) {
+      console.error('Error al cambiar el estado:', err);
+      // 3. Error
+      this.tipoModal = 'error';
+      this.mensajeModal = 'Ocurrió un error';
+      this.subtituloModal = 'No se pudo actualizar el estado del turno. Reintentá nuevamente.';
+      this.cdr.detectChanges();
     }
   }
 
-  async cancelarTurno(idTurno: string | number) {
-    const confirmacion = confirm('¿Estás seguro de que querés cancelar/rechazar este turno?');
-    if (!confirmacion) return;
-
-    await this.cambiarEstadoTurno(idTurno, 'rechazado');
+  cancelarTurno(idTurno: string | number) {
+    this.cambiarEstadoTurno(idTurno, 'rechazado');
   }
 
   avisarProximoCorteWhatsApp(turno: Reserva) {
     if (!turno.telefono_cliente) {
-      alert('Este turno no tiene un número de teléfono registrado.');
+      this.mostrarModal = true;
+      this.tipoModal = 'error';
+      this.mensajeModal = 'Sin teléfono registrado';
+      this.subtituloModal = 'Este cliente no tiene un número cargado para enviar WhatsApp.';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -142,6 +182,11 @@ export class AdminComponent implements OnInit {
     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
     window.open(url, '_blank');
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.cdr.detectChanges();
   }
 
   cerrarSesion() {

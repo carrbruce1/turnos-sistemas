@@ -107,3 +107,43 @@
     }
   </main>
 </div>
+
+<!-- MODAL OVERLAY PARA SPINNER Y ESTADOS -->
+@if (mostrarModal) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+
+      <!-- SPINNER CARGANDO -->
+      @if (tipoModal === 'cargando') {
+        <div class="modal-body">
+          <div class="spinner"></div>
+          <h3>{{ mensajeModal }}</h3>
+          <p>{{ subtituloModal }}</p>
+        </div>
+      }
+
+      <!-- ÉXITO -->
+      @if (tipoModal === 'exito') {
+        <div class="modal-body">
+          <div class="icon-circle exito-icon">✓</div>
+          <h2>¡Excelente!</h2>
+          <p>{{ mensajeModal }}</p>
+        </div>
+      }
+
+      <!-- ERROR -->
+      @if (tipoModal === 'error') {
+        <div class="modal-body">
+          <div class="icon-circle error-icon">✕</div>
+          <h2>{{ mensajeModal }}</h2>
+          <p>{{ subtituloModal }}</p>
+
+          <button type="button" class="btn-reintentar" (click)="cerrarModal()">
+            Entendido
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

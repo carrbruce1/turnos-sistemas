@@ -39,23 +39,57 @@
           }
         </div>
 
-        @if (errorLogin) {
-          <div class="error-banner">
-            {{ errorLogin }}
-          </div>
-        }
-
         <button type="submit" [disabled]="cargando" class="btn-submit">
-          {{ cargando ? 'Iniciando sesión...' : 'Ingresar' }}
+          Ingresar
         </button>
       </form>
     </div>
   </section>
 </main>
 
+<!-- MODAL OVERLAY FLOTANTE -->
+@if (mostrarModal) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+
+      <!-- ESTADO 1: CARGANDO -->
+      @if (tipoModal === 'cargando') {
+        <div class="modal-body">
+          <div class="spinner"></div>
+          <h3>Iniciando sesión...</h3>
+          <p>Validando tus credenciales, aguardá un instante.</p>
+        </div>
+      }
+
+      <!-- ESTADO 2: ÉXITO -->
+      @if (tipoModal === 'exito') {
+        <div class="modal-body">
+          <div class="icon-circle exito-icon">✓</div>
+          <h2>¡Bienvenido!</h2>
+          <p>Sesión iniciada correctamente. Redirigiendo...</p>
+        </div>
+      }
+
+      <!-- ESTADO 3: ERROR -->
+      @if (tipoModal === 'error') {
+        <div class="modal-body">
+          <div class="icon-circle error-icon">✕</div>
+          <h2>Error de Ingreso</h2>
+          <p>{{ errorLogin }}</p>
+
+          <button type="button" class="btn-reintentar" (click)="cerrarModal()">
+            Reintentar
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}
+
 <footer class="main-footer">
   <div class="footer-brand">
     <img src="img/bcstudio.png" alt="BC Studio Logo" class="footer-logo">
-    <span>DESARROLLADO POR <strong>BC STUDIO</strong></span>
+    <span>DESARROLLADO POR <strong>Sinapsia Digital</strong></span>
   </div>
 </footer>

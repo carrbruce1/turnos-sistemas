@@ -33,7 +33,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private supabaseService = inject(SupabaseService);
 
+  // ⚠️ PONÉ ACÁ EL NÚMERO DE WHATSAPP DE TU BARBERÍA (Formato internacional sin + ni espacios)
+  // Ejemplo Argentina: 5491112345678
+  private numeroBarberiaWA = '5493454155742'; 
+
   cargando = false;
+  mostrarModal: boolean = false;
+  tipoModal: 'cargando' | 'exito' | 'error' = 'cargando';
+  urlWhatsAppModal = '';
+  resumenReservaModal: any = {
+    nombre_cliente: '',
+    servicio: '',
+    fechaFormateada: '',
+    hora: ''
+  };
+
   mensajeExito = false;
 
   horariosHabituales: string[] = ['09:00', '10:00', '11:00', '16:00', '17:00', '18:00', '19:00'];
@@ -104,7 +118,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${yyyy}-${mm}-${dd}`;
   }
 
-  // Helper para mostrar la fecha en formato latino DD/MM/YYYY
   formatearFechaLatina(fechaStr: string): string {
     if (!fechaStr) return '';
     const partes = fechaStr.split('-');
@@ -112,13 +125,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
   }
 
-  // Comprueba si una fecha (YYYY-MM-DD) es estrictamente menor a la fecha de hoy
   esFechaPasada(fechaStr: string): boolean {
     const hoyStr = this.formatearFechaISO(new Date());
     return fechaStr < hoyStr;
   }
 
-  // Comprueba si una hora concreta de un día concreto ya pasó
   esSlotPasado(fechaStr: string, horaStr: string): boolean {
     const ahora = new Date();
     const hoyStr = this.formatearFechaISO(ahora);
@@ -183,7 +194,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   seleccionarDiaMiniCal(dia: DiaMes) {
-    if (dia.deshabilitado) return; // Bloquea selección de fechas pasadas
+    if (dia.deshabilitado) return;
 
     this.fechaSeleccionadaStr = dia.fechaStr;
     this.reservaForm.patchValue({ fecha: this.fechaSeleccionadaStr });
@@ -263,36 +274,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     try {
-      const { data, error } = await this.supabaseService.crearReserva(nuevaReserva);
+      const { error } = await this.supabaseService.crearReserva(nuevaReserva);
       if (error) throw error;
 
       this.mensajeExito = true;
-
-      const turnoCreado: any = Array.isArray(data) ? (data as any[])[0] : data;
-      const turnoId = turnoCreado?.id;
-
-      const urlDominio = window.location.origin;
-      const linkCancelar = `${urlDominio}/cancelar-turno/${turnoId}`;
-
       const fechaFormateada = this.formatearFechaLatina(nuevaReserva.fecha);
-
       const mensajeWhatsApp = 
-        `¡Hola! Acabo de reservar un turno en la barbería 💈\n\n` +
+        `¡Hola Barbería! ✂️ Quisiera confirmar el siguiente turno:\n\n` +
         `👤 *Cliente:* ${nuevaReserva.nombre_cliente}\n` +
-        `✂️ *Servicio:* ${nuevaReserva.servicio}\n` +
-        `📅 *Fecha:* ${fechaFormateada} - ${nuevaReserva.hora} hs\n\n` +
-        `Si necesitas cancelar o reprogramar, podés hacerlo desde este enlace:\n${linkCancelar}`;
-
-      // Limpieza y formateo dinámico del número ingresado por el cliente
-      let telCliente = nuevaReserva.telefono_cliente.replace(/\D/g, '');
-      if (telCliente.startsWith('0')) {
-        telCliente = telCliente.substring(1);
-      }
-      if (!telCliente.startsWith('549')) {
-        telCliente = '549' + telCliente;
-      }
-
-      const urlWa = `https://wa.me/${telCliente}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+        `📞 *Teléfono:* ${nuevaReserva.telefono_cliente}\n` +
+        `💈 *Servicio:* ${nuevaReserva.servicio}\n` +
+        `📅 *Fecha:* ${fechaFormateada}\n` +
+        `⏰ *Hora:* ${nuevaReserva.hora} hs\n\n` +
+        `💬 _(Si necesito cancelar o cambiar el horario, responderé por este mismo chat)._`;
+      const urlWa = `https://wa.me/${this.numeroBarberiaWA}?text=${encodeURIComponent(mensajeWhatsApp)}`;
       window.open(urlWa, '_blank');
 
       await this.cargarReservasDesdeSupabase();

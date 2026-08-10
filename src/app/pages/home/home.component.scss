@@ -1,25 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap');
-
-html {
-  scroll-behavior: smooth;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Oswald', sans-serif;
-  background-color: #0d0d0d;
-  color: #ffffff;
-}
-
-/* --- HEADER --- */
+/* --- ESTILOS GENERALES Y LAYOUT --- */
 header {
   width: 100%;
-  background-color: #f4f4f4;
+  background: #f4f4f4;
   padding: 12px 24px;
   position: sticky;
   top: 0;
@@ -32,33 +14,17 @@ header {
     max-width: 1200px;
     margin: 0 auto;
 
-    .logo-img img {
-      height: 35px;
-      width: auto;
-      display: block;
-    }
-
-    .contenido-nav h2 {
-      color: #111111;
-      font-size: 1.3rem;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+    .logo-img img { height: 35px; width: auto; display: block; }
+    .contenido-nav h2 { color: #111; font-size: 1.3rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
   }
 }
 
-/* --- HERO --- */
 .hero-contenido {
   position: relative;
   width: 100%;
   height: calc(100vh - 60px);
   min-height: 450px;
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-    url('/img/barber2.jfif');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/img/barber2.jfif') center/cover;
 
   .hero-overlay {
     height: 100%;
@@ -75,29 +41,22 @@ header {
       letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 25px;
-      color: white;
-
-      @media (max-width: 768px) {
-        font-size: 1.8rem;
-      }
+      color: #fff;
+      @media (max-width: 768px) { font-size: 1.8rem; }
     }
 
     .btn-reservar {
       display: inline-block;
       text-decoration: none;
-      background-color: #f3efe6;
-      color: #000000;
+      background: #f3efe6;
+      color: #000;
       padding: 12px 36px;
       font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background-color: #ffffff;
-        transform: translateY(-2px);
-      }
+      transition: all 0.2s;
+      &:hover { background: #fff; transform: translateY(-2px); }
     }
   }
 }
@@ -108,560 +67,239 @@ header {
   max-width: 1100px;
   margin: 0 auto;
 
-  .container-reserva {
+  .container-reserva .form-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    @media (max-width: 850px) { grid-template-columns: 1fr; }
+  }
+}
+
+.form-card, 
+.google-appointment-container {
+  background: #f4f4f4;
+  color: #111;
+  padding: 35px 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+  h2, h3 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #111;
+    padding-bottom: 8px;
+    color: #111;
+  }
+}
+
+/* --- FORMULARIO Y CAMPOS --- */
+.form-card {
+  display: flex;
+  flex-direction: column;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+
+    label { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #111;
+      background: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #111;
+      outline: none;
+      &:focus { border-width: 2px; }
+    }
+    select { cursor: pointer; }
+  }
+
+  .resumen-turno {
+    background: #e2e2e2;
+    border-left: 4px solid #111;
+    padding: 12px;
+    margin: 15px 0;
+    p { margin: 4px 0; font-size: 0.95rem; color: #111; font-weight: 500; }
+  }
+}
+
+/* BOTÓN DE ENVÍO Y MENSAJES */
+.form-actions, .form-card {
+  .btn-submit {
     width: 100%;
-
-    .form-card-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: start;
-
-      @media (max-width: 850px) {
-        grid-template-columns: 1fr;
-      }
-    }
-  }
-
-  /* Tarjetas del Formulario y Calendario */
-  .form-card, 
-  .google-appointment-container {
-    background-color: #f4f4f4;
-    color: #111111;
-    padding: 35px 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-
-    h2, h3 {
-      font-size: 1.6rem;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-bottom: 2px solid #111111;
-      padding-bottom: 8px;
-      color: #111111;
-      font-family: 'Oswald', sans-serif;
-    }
-  }
-
-  /* --- ESTILOS DEL FORMULARIO --- */
-  .form-card {
-    display: flex;
-    flex-direction: column;
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 18px;
-
-      label {
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin-bottom: 6px;
-        letter-spacing: 0.5px;
-      }
-
-      input, 
-      select {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #111111;
-        background-color: #ffffff;
-        font-family: inherit;
-        font-size: 0.95rem;
-        color: #111111;
-        outline: none;
-        transition: border-color 0.2s ease;
-
-        &:focus {
-          border-width: 2px;
-        }
-      }
-
-      select {
-        cursor: pointer;
-      }
-    }
-
-    .resumen-turno {
-      background: #e2e2e2;
-      border-left: 4px solid #111111;
-      padding: 12px;
-      margin: 15px 0;
-
-      p {
-        margin: 4px 0;
-        font-size: 0.95rem;
-        color: #111111;
-        font-weight: 500;
-      }
-    }
-
-    .btn-submit {
-      margin-top: 10px;
-      background-color: #111111;
-      color: #ffffff;
-      border: none;
-      padding: 14px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: #333333;
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  /* --- CALENDARIO GOOGLE ADAPTADO AL CLIENTE --- */
-  .google-appointment-container {
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-
-    .appointment-header {
-      margin-bottom: 20px;
-
-      .timezone-info {
-        font-size: 0.85rem;
-        color: #555555;
-        margin-top: 4px;
-      }
-    }
-
-    .appointment-body {
-      display: flex;
-      gap: 24px;
-
-      @media (max-width: 768px) {
-        flex-direction: column;
-      }
-    }
-
-    /* MINI CALENDARIO */
-    .mini-calendar {
-      width: 220px;
-      flex-shrink: 0;
-
-      .calendar-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-
-        .month-label {
-          font-weight: 700;
-          font-size: 1rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .nav-btns button {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px 8px;
-          font-size: 1.1rem;
-          color: #111111;
-          font-weight: bold;
-
-          &:hover {
-            opacity: 0.6;
-          }
-        }
-      }
-
-      .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 4px;
-        text-align: center;
-
-        .day-header {
-          font-size: 0.8rem;
-          color: #666666;
-          font-weight: 700;
-        }
-
-        .day-cell {
-          background: none;
-          border: none;
-          height: 28px;
-          width: 28px;
-          border-radius: 50%;
-          font-family: 'Oswald', sans-serif;
-          font-size: 0.85rem;
-          color: #111111;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-
-          &.out-month {
-            color: #cccccc;
-          }
-
-          &.selected {
-            background-color: #111111;
-            color: #ffffff;
-            font-weight: 700;
-          }
-
-          &:hover:not(.selected) {
-            background-color: #dcdcdc;
-          }
-        }
-      }
-    }
-
-    /* COLUMNAS Y PÍLDORAS DE HORARIOS */
-    .weekly-slots {
-      flex-grow: 1;
-
-      .week-nav {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 12px;
-
-        button {
-          background: none;
-          border: none;
-          cursor: pointer;
-          font-size: 1.1rem;
-          color: #111111;
-          font-weight: bold;
-
-          &:hover {
-            opacity: 0.6;
-          }
-        }
-      }
-
-      .week-columns {
-        display: flex;
-        justify-content: space-between;
-
-        .day-column {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 18%;
-
-          .col-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 16px;
-
-            .day-name {
-              font-size: 0.8rem;
-              color: #666666;
-              font-weight: 700;
-              text-transform: uppercase;
-            }
-
-            .day-num-circle {
-              font-size: 1.1rem;
-              font-weight: 700;
-              margin-top: 4px;
-              width: 34px;
-              height: 34px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 50%;
-              color: #111111;
-            }
-
-            &.active .day-num-circle {
-              background-color: #111111;
-              color: #ffffff;
-            }
-          }
-
-          .slots-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            width: 100%;
-
-            .slot-dash {
-              color: #bbbbbb;
-              font-weight: bold;
-              height: 34px;
-              display: flex;
-              align-items: center;
-            }
-
-            .time-pill {
-              border: 1px solid #111111;
-              background: #ffffff;
-              color: #111111;
-              padding: 6px 4px;
-              font-family: 'Oswald', sans-serif;
-              font-weight: 500;
-              font-size: 0.9rem;
-              cursor: pointer;
-              width: 100%;
-              text-align: center;
-              transition: all 0.2s ease;
-
-              &:hover {
-                background-color: #e2e2e2;
-              }
-
-              &.active {
-                background-color: #111111;
-                color: #ffffff;
-                font-weight: 700;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /* Mensajes de Alerta/Estado */
-  .error-msg {
-    color: #dc2626;
-    font-size: 0.85rem;
-    font-weight: 500;
-    margin-top: 4px;
-    display: block;
-  }
-
-  .exito-msg {
-    color: #16a34a;
-    font-size: 0.95rem;
+    margin-top: 10px;
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 1.1rem;
     font-weight: 700;
-    margin-top: 15px;
-    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover { background: #333; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+.error-msg { color: #dc2626; font-size: 0.85rem; font-weight: 500; margin-top: 4px; display: block; }
+.exito-msg { color: #16a34a; font-size: 0.95rem; font-weight: 700; margin-top: 15px; text-align: center; }
+
+/* --- CALENDARIO GOOGLE --- */
+.google-appointment-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+
+  .appointment-body {
+    display: flex;
+    gap: 24px;
+    @media (max-width: 768px) { flex-direction: column; }
+  }
+
+  /* MINI CALENDARIO */
+  .mini-calendar {
+    width: 220px;
+    flex-shrink: 0;
+
+    .calendar-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      .month-label { font-weight: 700; font-size: 1rem; text-transform: uppercase; }
+      .nav-btns button { background: none; border: none; cursor: pointer; padding: 4px 8px; font-size: 1.1rem; color: #111; font-weight: bold; &:hover { opacity: 0.6; } }
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+      .day-header { font-size: 0.8rem; color: #666; font-weight: 700; }
+      .day-cell {
+        background: none; border: none; height: 28px; width: 28px; border-radius: 50%;
+        font-family: inherit; font-size: 0.85rem; color: #111; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        &.out-month { color: #ccc; }
+        &.selected { background: #111; color: #fff; font-weight: 700; }
+        &:hover:not(.selected) { background: #dcdcdc; }
+      }
+    }
+  }
+
+  /* HORARIOS */
+  .weekly-slots {
+    flex-grow: 1;
+    .week-nav {
+      display: flex; gap: 8px; margin-bottom: 12px;
+      button { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: #111; font-weight: bold; &:hover { opacity: 0.6; } }
+    }
+
+    .week-columns {
+      display: flex; justify-content: space-between;
+      .day-column {
+        display: flex; flex-direction: column; align-items: center; width: 18%;
+        .col-header {
+          display: flex; flex-direction: column; align-items: center; margin-bottom: 16px;
+          .day-name { font-size: 0.8rem; color: #666; font-weight: 700; text-transform: uppercase; }
+          .day-num-circle {
+            font-size: 1.1rem; font-weight: 700; margin-top: 4px; width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #111;
+          }
+          &.active .day-num-circle { background: #111; color: #fff; }
+        }
+
+        .slots-list {
+          display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;
+          .slot-dash { color: #bbb; font-weight: bold; height: 34px; display: flex; align-items: center; }
+          .time-pill {
+            border: 1px solid #111; background: #fff; color: #111; padding: 6px 4px;
+            font-family: inherit; font-weight: 500; font-size: 0.9rem; cursor: pointer; width: 100%; text-align: center; transition: all 0.2s;
+            &:hover { background: #e2e2e2; }
+            &.active { background: #111; color: #fff; font-weight: 700; }
+          }
+        }
+      }
+    }
   }
 }
 
 /* --- FOOTER --- */
 .footer-contenido {
   width: 100%;
-  background-color: #000000;
-  border-top: 1px solid #222222;
+  background: #000;
+  border-top: 1px solid #222;
   padding: 40px 20px 20px;
-  color: #ffffff;
+  color: #fff;
 
   .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    text-align: center;
+    max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;
   }
 
   .contenido-redes {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-
+    display: flex; align-items: center; justify-content: center; gap: 20px;
     a {
-      display: inline-block;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-
-      img {
-        width: 28px;
-        height: 28px;
-        object-fit: contain;
-        filter: brightness(0) invert(1); 
-      }
-
-      &:hover {
-        transform: translateY(-3px);
-        opacity: 0.8;
-      }
+      display: inline-block; transition: transform 0.2s, opacity 0.2s;
+      img { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
+      &:hover { transform: translateY(-3px); opacity: 0.8; }
     }
   }
 
   .contenido-info-footer {
-    h2 {
-      font-size: 1.2rem;
-      font-weight: 500;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: #f4f4f4;
-    }
-
-    p {
-      font-size: 0.85rem;
-      color: #888888;
-      letter-spacing: 0.5px;
-
-      span {
-        color: #ffffff;
-        font-weight: 500;
-      }
-    }
+    h2 { font-size: 1.2rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; color: #f4f4f4; }
+    p { font-size: 0.85rem; color: #888; letter-spacing: 0.5px; span { color: #fff; font-weight: 500; } }
   }
 }
 
-/* --- ESTILOS DEL MODAL --- */
+/* --- MODAL --- */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px);
 }
 
 .modal-card {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  max-width: 420px;
-  width: 90%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  animation: fadeIn 0.3s ease-out;
+  background: #fff; padding: 2rem; border-radius: 16px; max-width: 420px; width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); text-align: center; animation: fadeIn 0.3s ease-out;
 
   .modal-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-
-    h2 {
-      margin: 0;
-      color: #1a1a1a;
-      font-size: 1.6rem;
-      font-weight: 700;
-    }
-
-    p {
-      color: #555555;
-      font-size: 0.95rem;
-      margin: 0;
-    }
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    h2 { margin: 0; color: #1a1a1a; font-size: 1.6rem; font-weight: 700; }
+    p { color: #555; font-size: 0.95rem; margin: 0; }
 
     .resumen-confirmacion {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      padding: 1rem;
-      width: 100%;
-      text-align: center;
-      margin: 0.5rem 0;
-      border: 1px solid #e9ecef;
-
-      p {
-        margin: 0.4rem 0;
-        color: #333;
-        font-size: 0.95rem;
-      }
+      background: #f8f9fa; border-radius: 10px; padding: 1rem; width: 100%; margin: 0.5rem 0; border: 1px solid #e9ecef;
+      p { margin: 0.4rem 0; color: #333; font-size: 0.95rem; }
     }
 
-    /* ÍCONO DE ÉXITO CIRCULAR */
     .icon-circle.exito-icon {
-      width: 60px;
-      height: 60px;
-      background-color: #e6f4ea;
-      color: #28a745;
-      font-size: 1.8rem;
-      font-weight: bold;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 60px; height: 60px; background: #e6f4ea; color: #28a745; font-size: 1.8rem; font-weight: bold;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
     }
 
-    /* BOTÓN ACEPTAR Y REINTENTAR */
-    .btn-aceptar,
-    .btn-reintentar {
-      background-color: #1a1a1a;
-      color: #ffffff;
-      border: none;
-      padding: 0.75rem 2rem;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-      width: 100%;
-      max-width: 200px;
-      margin-top: 0.5rem;
-
-      &:hover {
-        background-color: #333333;
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
+    .btn-aceptar, .btn-reintentar {
+      background: #1a1a1a; color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-size: 0.95rem;
+      font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; width: 100%; max-width: 200px; margin-top: 0.5rem;
+      &:hover { background: #333; transform: translateY(-1px); }
+      &:active { transform: translateY(0); }
     }
-
-    .btn-reintentar {
-      background-color: #dc3545;
-
-      &:hover {
-        background-color: #bd2130;
-      }
-    }
+    .btn-reintentar { background: #dc3545; &:hover { background: #bd2130; } }
   }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/* Agregá .form-actions para que mantenga el estilo exacto */
-.form-card, .form-actions {
-  .btn-submit {
-    width: 100%;
-    padding: 12px 20px;
-    background-color: #000; /* O el color que tengas */
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    /* ... tus estilos actuales ... */
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  .exito-msg {
-    margin-top: 10px;
-    color: green;
-  }
 }

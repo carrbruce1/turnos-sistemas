@@ -33,14 +33,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private supabaseService = inject(SupabaseService);
 
-  // ⚠️ PONÉ ACÁ EL NÚMERO DE WHATSAPP DE TU BARBERÍA (Formato internacional sin + ni espacios)
-  // Ejemplo Argentina: 5491112345678
-  private numeroBarberiaWA = '5493454155742'; 
-
   cargando = false;
   mostrarModal: boolean = false;
   tipoModal: 'cargando' | 'exito' | 'error' = 'cargando';
-  urlWhatsAppModal = '';
   resumenReservaModal: any = {
     nombre_cliente: '',
     servicio: '',
@@ -261,6 +256,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.cargando = true;
+    this.mostrarModal = true;
+    this.tipoModal = 'cargando';
     this.mensajeExito = false;
 
     const nuevaReserva = {
@@ -278,17 +275,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (error) throw error;
 
       this.mensajeExito = true;
-      const fechaFormateada = this.formatearFechaLatina(nuevaReserva.fecha);
-      const mensajeWhatsApp = 
-        `¡Hola Barbería! ✂️ Quisiera confirmar el siguiente turno:\n\n` +
-        `👤 *Cliente:* ${nuevaReserva.nombre_cliente}\n` +
-        `📞 *Teléfono:* ${nuevaReserva.telefono_cliente}\n` +
-        `💈 *Servicio:* ${nuevaReserva.servicio}\n` +
-        `📅 *Fecha:* ${fechaFormateada}\n` +
-        `⏰ *Hora:* ${nuevaReserva.hora} hs\n\n` +
-        `💬 _(Si necesito cancelar o cambiar el horario, responderé por este mismo chat)._`;
-      const urlWa = `https://wa.me/${this.numeroBarberiaWA}?text=${encodeURIComponent(mensajeWhatsApp)}`;
-      window.open(urlWa, '_blank');
+      this.tipoModal = 'exito';
+      this.resumenReservaModal = {
+        nombre_cliente: nuevaReserva.nombre_cliente,
+        servicio: nuevaReserva.servicio,
+        fechaFormateada: this.formatearFechaLatina(nuevaReserva.fecha),
+        hora: nuevaReserva.hora
+      };
 
       await this.cargarReservasDesdeSupabase();
       this.construirVistaSemanal();
@@ -304,9 +297,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     } catch (err: any) {
       console.error('Error al guardar reserva:', err?.message || err);
-      alert('Hubo un problema al procesar la reserva. Intenta de nuevo.');
+      this.tipoModal = 'error';
     } finally {
       this.cargando = false;
     }
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
   }
 }

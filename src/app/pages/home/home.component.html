@@ -70,21 +70,12 @@
             <p><strong>Fecha:</strong> {{ formatearFechaLatina(reservaForm.get('fecha')?.value) || 'No seleccionada' }}</p>
             <p><strong>Hora:</strong> {{ reservaForm.get('hora')?.value || 'No seleccionada' }}</p>
           </div>
-
-          <button type="submit" class="btn-submit" [disabled]="cargando || reservaForm.invalid">
-            {{ cargando ? 'ENVIANDO...' : 'CONFIRMAR RESERVA' }}
-          </button>
-
-          @if (mensajeExito) {
-            <p class="exito-msg">¡Reserva enviada con éxito! Aparecerá en el panel del admin.</p>
-          }
         </div>
 
         <!-- CARD DERECHA: CLON DE GOOGLE APPOINTMENTS -->
         <div class="google-appointment-container">
           <div class="appointment-header">
             <h3>Selecciona un horario para la cita</h3>
-            <!-- <span class="timezone-info">(GMT-03:00) Hora estándar de Argentina - Córdoba</span> -->
           </div>
 
           <div class="appointment-body">
@@ -160,11 +151,65 @@
           </div>
         </div>
 
+        <!-- SECCIÓN INFERIOR: BOTÓN Y MENSAJES DE ACCIÓN -->
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" [disabled]="cargando || reservaForm.invalid">
+            {{ cargando ? 'ENVIANDO...' : 'CONFIRMAR RESERVA' }}
+          </button>
+
+          @if (mensajeExito) {
+            <p class="exito-msg">¡Reserva registrada con éxito!</p>
+          }
+        </div>
+
       </form>
 
     </div>
   </section>
 </main>
+
+<!-- MODAL DE CONFIRMACIÓN -->
+@if (mostrarModal) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+
+      @if (tipoModal === 'cargando') {
+        <div class="modal-body">
+          <div class="spinner"></div>
+          <h3>Procesando tu reserva...</h3>
+          <p>Por favor aguardá un segundo.</p>
+        </div>
+      }
+
+      @if (tipoModal === 'exito') {
+        <div class="modal-body">
+          <div class="icon-circle exito-icon">✓</div>
+          <h2>¡Reserva Confirmada!</h2>
+          <p>Gracias <strong>{{ resumenReservaModal.nombre_cliente }}</strong>, registramos tu solicitud.</p>
+          
+          <div class="resumen-confirmacion">
+            <p><strong>Servicio:</strong> {{ resumenReservaModal.servicio }}</p>
+            <p><strong>Fecha:</strong> {{ resumenReservaModal.fechaFormateada }}</p>
+            <p><strong>Hora:</strong> {{ resumenReservaModal.hora }} hs</p>
+          </div>
+
+          <button type="button" class="btn-aceptar" (click)="cerrarModal()">Aceptar</button>
+        </div>
+      }
+
+      @if (tipoModal === 'error') {
+        <div class="modal-body">
+          <div class="icon-circle error-icon">✕</div>
+          <h2>Ocurrió un error</h2>
+          <p>No se pudo registrar la reserva. Por favor intentá de nuevo.</p>
+
+          <button type="button" class="btn-reintentar" (click)="cerrarModal()">Entendido</button>
+        </div>
+      }
+
+    </div>
+  </div>
+}
 
 <footer class="footer-contenido">
   <div class="footer-container">

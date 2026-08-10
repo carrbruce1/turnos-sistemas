@@ -57,13 +57,18 @@
               <div class="turno-info">
                 <p><strong>Cliente:</strong> {{ turno.nombre_cliente || 'Sin Nombre' }}</p>
                 <p><strong>Servicio:</strong> {{ turno.servicio || 'Sin servicio' }}</p>
-                <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+                <p><strong>Fecha/Hora:</strong> {{ formatearFechaLatina(turno.fecha) }} - {{ turno.hora }} hs</p>
+                <p><strong>Estado:</strong> 
+                  <span class="badge" [ngClass]="turno.estado">{{ turno.estado | uppercase }}</span>
+                </p>
               </div>
 
               <div class="turno-acciones">
-                @if (turno.estado === 'en_proceso' || turno.estado === 'pendiente') {
-                  <button class="btn-wpp" (click)="avisarProximoCorteWhatsApp(turno)">
-                    <img src="/iconos/conversacion.png" alt="Avisar" class="action-icon"> Avisar (30 min)
+                @if (turno.estado === 'en_proceso' || turno.estado === 'pendiente' || turno.estado === 'confirmado') {
+                  <!-- BOTÓN PARA CONFIRMAR Y AVISAR POR WHATSAPP -->
+                  <button class="btn-wpp" (click)="confirmarYEnviarWhatsApp(turno)">
+                    <img src="/iconos/conversacion.png" alt="Avisar" class="action-icon"> 
+                    {{ turno.estado === 'confirmado' ? 'Reenviar WhatsApp' : 'Confirmar y Avisar' }}
                   </button>
 
                   <button class="btn-finalizar" (click)="cambiarEstadoTurno(turno.id, 'finalizado')">
@@ -95,7 +100,7 @@
               <div class="turno-info">
                 <p><strong>Cliente:</strong> {{ turno.nombre_cliente || 'Sin Nombre' }}</p>
                 <p><strong>Servicio:</strong> {{ turno.servicio || 'General' }}</p>
-                <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+                <p><strong>Fecha/Hora:</strong> {{ formatearFechaLatina(turno.fecha) }} - {{ turno.hora }} hs</p>
                 <p><strong>Estado:</strong> <span class="badge finalizado">Finalizado</span></p>
               </div>
             </div>

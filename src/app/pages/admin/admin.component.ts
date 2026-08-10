@@ -121,12 +121,14 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  async cambiarEstadoTurno(idTurno: string | number, nuevoEstado: 'finalizado' | 'rechazado') {
-    // 1. Mostrar Spinner
+  async cambiarEstadoTurno(idTurno: string | number, nuevoEstado: 'confirmado' | 'finalizado' | 'rechazado') {
     this.mostrarModal = true;
     this.tipoModal = 'cargando';
     
-    if (nuevoEstado === 'finalizado') {
+    if (nuevoEstado === 'confirmado') {
+      this.mensajeModal = 'Confirmando turno...';
+      this.subtituloModal = 'Actualizando el registro en la base de datos.';
+    } else if (nuevoEstado === 'finalizado') {
       this.mensajeModal = 'Finalizando turno...';
       this.subtituloModal = 'Actualizando el registro en la base de datos.';
     } else {
@@ -141,9 +143,15 @@ export class AdminComponent implements OnInit {
       if (!error) {
         await this.cargarTurnos();
         
-        // 2. Éxito
         this.tipoModal = 'exito';
-        this.mensajeModal = nuevoEstado === 'finalizado' ? '¡Turno finalizado!' : 'El turno fue cancelado/rechazado.';
+        if (nuevoEstado === 'confirmado') {
+          this.mensajeModal = '¡Turno confirmado!';
+        } else if (nuevoEstado === 'finalizado') {
+          this.mensajeModal = '¡Turno finalizado!';
+        } else {
+          this.mensajeModal = 'El turno fue cancelado/rechazado.';
+        }
+        
         this.cdr.detectChanges();
 
         setTimeout(() => {
@@ -155,7 +163,6 @@ export class AdminComponent implements OnInit {
       }
     } catch (err) {
       console.error('Error al cambiar el estado:', err);
-      // 3. Error
       this.tipoModal = 'error';
       this.mensajeModal = 'Ocurrió un error';
       this.subtituloModal = 'No se pudo actualizar el estado del turno. Reintentá nuevamente.';
@@ -167,7 +174,8 @@ export class AdminComponent implements OnInit {
     this.cambiarEstadoTurno(idTurno, 'rechazado');
   }
 
-  avisarProximoCorteWhatsApp(turno: Reserva) {
+  // CONFIRMA EL TURNO Y ABRE WHATSAPP CON EL MENSAJE FORMATAEADO
+  async confirmarYEnviarWhatsApp(turno: Reserva) {
     if (!turno.telefono_cliente) {
       this.mostrarModal = true;
       this.tipoModal = 'error';
@@ -177,11 +185,39 @@ export class AdminComponent implements OnInit {
       return;
     }
 
-    const telefono = turno.telefono_cliente.replace(/\D/g, '');
-    const mensaje = `Hola ${turno.nombre_cliente || ''}, te avisamos desde la barbería que en 30 minutos es tu turno de ${turno.servicio || 'corte'} (${turno.hora} hs). ¡Te esperamos!`;
-    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    // 1. Cambiamos el estado en la base de datos a 'confirmado'
+    await this.cambiarEstadoTurno(turno.id, 'confirmado');
 
+    // 2. Limpieza de número (asume formato local / Argentina, agrega 54 si falta)
+    let telefono = turno.telefono_cliente.replace(/\D/g, '');
+    if (!telefono.startsWith('54')) {
+      telefono = `54${telefono}`;
+    }
+
+    // 3. Formateo de fecha DD/MM/YYYY
+    const fechaFormateada = this.formatearFechaLatina(turno.fecha);
+
+    // 4. Mensaje detallado para el cliente
+    const mensaje = `¡Hola *${turno.nombre_cliente || 'Cliente'}*! 👋\n\n` +
+                    `Tu turno en *Barbería San Lorenzo* ha sido *CONFIRMADO* 💈✂️\n\n` +
+                    `📌 *Detalles de tu cita:*\n` +
+                    `🔹 *Servicio:* ${turno.servicio || 'Corte'}\n` +
+                    `📅 *Fecha:* ${fechaFormateada}\n` +
+                    `⏰ *Hora:* ${turno.hora} hs\n\n` +
+                    `📍 Te esperamos en nuestro local. Si necesitás reprogramar o cancelar, por favor avisanos con anticipación. ¡Muchas gracias!`;
+
+    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
+  }
+
+  // MÉTODO AUXILIAR PARA FORMATEAR LA FECHA YYYY-MM-DD A DD/MM/YYYY
+  formatearFechaLatina(fechaStr: string): string {
+    if (!fechaStr) return '';
+    const partes = fechaStr.split('-');
+    if (partes.length === 3) {
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    return fechaStr;
   }
 
   cerrarModal() {

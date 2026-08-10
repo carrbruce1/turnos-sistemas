@@ -109,31 +109,37 @@ header {
   margin: 0 auto;
 
   .container-reserva {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
+    width: 100%;
 
-    @media (max-width: 850px) {
-      grid-template-columns: 1fr;
+    .form-card-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+
+      @media (max-width: 850px) {
+        grid-template-columns: 1fr;
+      }
     }
   }
 
-  // Estilos compartidos para las 2 tarjetas claras
+  /* Tarjetas del Formulario y Calendario */
   .form-card, 
-  .calendario-reservas {
+  .google-appointment-container {
     background-color: #f4f4f4;
     color: #111111;
     padding: 35px 30px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 
-    h2 {
+    h2, h3 {
       font-size: 1.6rem;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       letter-spacing: 1px;
       text-transform: uppercase;
       border-bottom: 2px solid #111111;
       padding-bottom: 8px;
+      color: #111111;
+      font-family: 'Oswald', sans-serif;
     }
   }
 
@@ -176,6 +182,20 @@ header {
       }
     }
 
+    .resumen-turno {
+      background: #e2e2e2;
+      border-left: 4px solid #111111;
+      padding: 12px;
+      margin: 15px 0;
+
+      p {
+        margin: 4px 0;
+        font-size: 0.95rem;
+        color: #111111;
+        font-weight: 500;
+      }
+    }
+
     .btn-submit {
       margin-top: 10px;
       background-color: #111111;
@@ -193,25 +213,247 @@ header {
       &:hover {
         background-color: #333333;
       }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 
-  /* --- ÁREA CONTENEDORA DEL CALENDARIO --- */
-  .calendario-reservas {
+  /* --- CALENDARIO GOOGLE ADAPTADO AL CLIENTE --- */
+  .google-appointment-container {
     min-height: 400px;
+    display: flex;
+    flex-direction: column;
 
-    .calendario-placeholder {
-      padding: 20px 0;
-      color: #666666;
+    .appointment-header {
+      margin-bottom: 20px;
+
+      .timezone-info {
+        font-size: 0.85rem;
+        color: #555555;
+        margin-top: 4px;
+      }
     }
+
+    .appointment-body {
+      display: flex;
+      gap: 24px;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+
+    /* MINI CALENDARIO */
+    .mini-calendar {
+      width: 220px;
+      flex-shrink: 0;
+
+      .calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .month-label {
+          font-weight: 700;
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .nav-btns button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px 8px;
+          font-size: 1.1rem;
+          color: #111111;
+          font-weight: bold;
+
+          &:hover {
+            opacity: 0.6;
+          }
+        }
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        text-align: center;
+
+        .day-header {
+          font-size: 0.8rem;
+          color: #666666;
+          font-weight: 700;
+        }
+
+        .day-cell {
+          background: none;
+          border: none;
+          height: 28px;
+          width: 28px;
+          border-radius: 50%;
+          font-family: 'Oswald', sans-serif;
+          font-size: 0.85rem;
+          color: #111111;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+
+          &.out-month {
+            color: #cccccc;
+          }
+
+          &.selected {
+            background-color: #111111;
+            color: #ffffff;
+            font-weight: 700;
+          }
+
+          &:hover:not(.selected) {
+            background-color: #dcdcdc;
+          }
+        }
+      }
+    }
+
+    /* COLUMNAS Y PÍLDORAS DE HORARIOS */
+    .weekly-slots {
+      flex-grow: 1;
+
+      .week-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 1.1rem;
+          color: #111111;
+          font-weight: bold;
+
+          &:hover {
+            opacity: 0.6;
+          }
+        }
+      }
+
+      .week-columns {
+        display: flex;
+        justify-content: space-between;
+
+        .day-column {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 18%;
+
+          .col-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+
+            .day-name {
+              font-size: 0.8rem;
+              color: #666666;
+              font-weight: 700;
+              text-transform: uppercase;
+            }
+
+            .day-num-circle {
+              font-size: 1.1rem;
+              font-weight: 700;
+              margin-top: 4px;
+              width: 34px;
+              height: 34px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              color: #111111;
+            }
+
+            &.active .day-num-circle {
+              background-color: #111111;
+              color: #ffffff;
+            }
+          }
+
+          .slots-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+
+            .slot-dash {
+              color: #bbbbbb;
+              font-weight: bold;
+              height: 34px;
+              display: flex;
+              align-items: center;
+            }
+
+            .time-pill {
+              border: 1px solid #111111;
+              background: #ffffff;
+              color: #111111;
+              padding: 6px 4px;
+              font-family: 'Oswald', sans-serif;
+              font-weight: 500;
+              font-size: 0.9rem;
+              cursor: pointer;
+              width: 100%;
+              text-align: center;
+              transition: all 0.2s ease;
+
+              &:hover {
+                background-color: #e2e2e2;
+              }
+
+              &.active {
+                background-color: #111111;
+                color: #ffffff;
+                font-weight: 700;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Mensajes de Alerta/Estado */
+  .error-msg {
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .exito-msg {
+    color: #16a34a;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 15px;
+    text-align: center;
   }
 }
-
 
 /* --- FOOTER --- */
 .footer-contenido {
   width: 100%;
-  background-color: #000000; // Fondo negro acorde al tema
+  background-color: #000000;
   border-top: 1px solid #222222;
   padding: 40px 20px 20px;
   color: #ffffff;
@@ -226,7 +468,6 @@ header {
     text-align: center;
   }
 
-  /* Redes sociales */
   .contenido-redes {
     display: flex;
     align-items: center;
@@ -241,7 +482,6 @@ header {
         width: 28px;
         height: 28px;
         object-fit: contain;
-        // Filtro para mantenerlos en blanco pulido si tus pngs no son blancos
         filter: brightness(0) invert(1); 
       }
 
@@ -252,7 +492,6 @@ header {
     }
   }
 
-  /* Info y Branding */
   .contenido-info-footer {
     h2 {
       font-size: 1.2rem;

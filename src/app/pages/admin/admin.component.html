@@ -1,1 +1,109 @@
-<p>admin works!</p>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="menu-top">
+      <button [class.active-link]="vistaActual === 'turnos'" (click)="verVista('turnos')">
+        <img src="/iconos/cita.png" alt="Turnos" class="menu-icon"> Turnos
+      </button>
+
+      <button [class.active-link]="vistaActual === 'historial'" (click)="verVista('historial')">
+        <img src="/iconos/historia.png" alt="Historial" class="menu-icon"> Historial
+      </button>
+
+      <button (click)="navegarA('crear-usuario')">
+        <img src="/iconos/agregar-usuario.png" alt="Crear usuario" class="menu-icon"> Crear usuario
+      </button>
+    </div>
+
+    <div class="menu-bottom">
+      <button (click)="cerrarSesion()" class="btn-logout">
+        <img src="/iconos/fuerza.png" alt="Cerrar sesión" class="menu-icon"> Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h2>Hola {{ nombreUsuario }}</h2>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="search-bar-container">
+      <input 
+        type="text" 
+        placeholder="Buscar por cliente, servicio o teléfono..." 
+        [(ngModel)]="searchTerm" 
+        (input)="aplicarFiltros()"
+        class="search-input"
+      />
+    </div>
+
+    @if (vistaActual === 'turnos') {
+      <section class="cards-grid">
+        <div class="card in-process" [class.active]="estadoFiltro === 'en_proceso'" (click)="filtrarPorEstado('en_proceso')">
+          <h3>En proceso</h3>
+          <span class="count">{{ cantidadEnProceso }}</span>
+        </div>
+
+        <div class="card rejected" [class.active]="estadoFiltro === 'rechazado'" (click)="filtrarPorEstado('rechazado')">
+          <h3>Cancelados / Rechazados</h3>
+          <span class="count">{{ cantidadRechazados }}</span>
+        </div>
+      </section>
+
+      <section class="turnos-section">
+        <h3>Turnos: <span class="capitalize">{{ estadoFiltro === 'en_proceso' ? 'En Proceso' : 'Cancelados / Rechazados' }}</span></h3>
+        
+        <div class="turnos-list">
+          @for (turno of turnosFiltrados; track turno.id) {
+            <div class="turno-card">
+              <div class="turno-info">
+                <p><strong>Cliente:</strong> {{ turno.nombre_cliente || 'Sin Nombre' }}</p>
+                <p><strong>Servicio:</strong> {{ turno.servicio || 'Sin servicio' }}</p>
+                <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+              </div>
+
+              <div class="turno-acciones">
+                @if (turno.estado === 'en_proceso' || turno.estado === 'pendiente') {
+                  <button class="btn-wpp" (click)="avisarProximoCorteWhatsApp(turno)">
+                    <img src="/iconos/conversacion.png" alt="Avisar" class="action-icon"> Avisar (30 min)
+                  </button>
+
+                  <button class="btn-finalizar" (click)="cambiarEstadoTurno(turno.id, 'finalizado')">
+                    <img src="/iconos/fin.png" alt="Finalizar" class="action-icon"> Finalizado
+                  </button>
+
+                  <button class="btn-cancelar" (click)="cancelarTurno(turno.id)">
+                    <img src="/iconos/error.png" alt="Cancelar" class="action-icon"> Cancelar Turno
+                  </button>
+                }
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-msg">No hay turnos que coincidan con la búsqueda.</p>
+          }
+        </div>
+      </section>
+    }
+
+    @if (vistaActual === 'historial') {
+      <section class="historial-section">
+        <h3>
+          <img src="/iconos/historia.png" alt="Historial" class="title-icon"> Historial de Trabajos Finalizados
+        </h3>
+
+        <div class="turnos-list">
+          @for (turno of historialFiltrado; track turno.id) {
+            <div class="turno-card historial-card">
+              <div class="turno-info">
+                <p><strong>Cliente:</strong> {{ turno.nombre_cliente || 'Sin Nombre' }}</p>
+                <p><strong>Servicio:</strong> {{ turno.servicio || 'General' }}</p>
+                <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+                <p><strong>Estado:</strong> <span class="badge finalizado">Finalizado</span></p>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-msg">No hay trabajos finalizados que coincidan con la búsqueda.</p>
+          }
+        </div>
+      </section>
+    }
+  </main>
+</div>

@@ -1,0 +1,56 @@
+<div class="crear-usuario-container">
+  <div class="header">
+    <button class="btn-volver" (click)="volverAlAdmin()">← Volver al Dashboard</button>
+    <h2>Registrar Nuevo Usuario</h2>
+  </div>
+
+  <form (ngSubmit)="registrarEmpleado()" class="form-card">
+    <div class="form-group">
+      <label for="nombre">Nombre Completo</label>
+      <input 
+        type="text" 
+        id="nombre" 
+        [(ngModel)]="nuevoUsuario.nombre" 
+        name="nombre" 
+        placeholder="Ej: Franco Armani" 
+        required 
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Correo Electrónico</label>
+      <input 
+        type="email" 
+        id="email" 
+        [(ngModel)]="nuevoUsuario.email" 
+        name="email" 
+        placeholder="barbero@mibarberia.com" 
+        required 
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña Temporal</label>
+      <input 
+        type="password" 
+        id="password" 
+        [(ngModel)]="nuevoUsuario.password" 
+        name="password" 
+        placeholder="••••••••" 
+        required 
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="rol">Rol de Usuario</label>
+      <select id="rol" [(ngModel)]="nuevoUsuario.rol" name="rol" class="select-rol" required>
+        <option value="empleado">Empleado / Barbero</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-guardar" [disabled]="cargando">
+      {{ cargando ? 'Guardando...' : 'Crear Usuario' }}
+    </button>
+  </form>
+</div>

@@ -29,40 +29,38 @@ export class LoginComponent {
   }
 
   async onSubmit() {
-    if (loginFormInvalid(this.loginForm)) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
     this.cargando = true;
     this.errorLogin = null;
 
     try {
       const { email, password } = this.loginForm.value;
+      
+      // 1. Iniciar sesión en Supabase
       const { data, error } = await this.supabaseService.login(email, password);
-
       if (error) throw error;
 
-      // Consultar el rol del usuario logueado
+      // 2. Obtener el perfil para verificar el rol
       const perfil = await this.supabaseService.obtenerPerfilUsuario();
 
+      // 3. Redireccionar según el rol (Asegurate que las rutas coincidan con tu app.routes.ts)
       if (perfil?.rol === 'admin') {
-        this.router.navigate(['/admin']);
+        await this.router.navigate(['/admin']); // Cambiado a /admin si tu ruta es 'admin'
       } else if (perfil?.rol === 'empleado') {
-        this.router.navigate(['/empleado']);
+        await this.router.navigate(['/empleados']);
       } else {
-        this.router.navigate(['/']);
+        await this.router.navigate(['/home']);
       }
 
     } catch (err: any) {
-      this.errorLogin = 'Credenciales incorrectas o usuario no registrado.';
+      console.error('Error Login:', err);
+      this.errorLogin = err.message || 'Credenciales incorrectas o usuario no registrado.';
     } finally {
       this.cargando = false;
     }
   }
-}
-
-function loginFormInvalid(form: FormGroup): boolean {
-  if (form.invalid) {
-    form.markAllAsTouched();
-    return true;
-  }
-  return false;
 }

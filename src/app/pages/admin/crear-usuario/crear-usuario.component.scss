@@ -1,0 +1,125 @@
+.crear-usuario-container {
+  max-width: 550px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .btn-volver {
+      align-self: flex-start;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #0f172a;
+      }
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  /* --- Tarjeta del Formulario --- */
+  .form-card {
+    background-color: #ffffff;
+    padding: 2.25rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: #1e293b;
+        background-color: #ffffff;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          border-color: #94a3b8;
+        }
+
+        &:focus {
+          border-color: #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        &:disabled {
+          background-color: #f1f5f9;
+          color: #94a3b8;
+          cursor: not-allowed;
+          border-color: #e2e8f0;
+        }
+
+        &::placeholder {
+          color: #94a3b8;
+        }
+      }
+    }
+
+    /* --- Botón Guardar --- */
+    .btn-guardar {
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+
+      &:active {
+        transform: scale(0.99);
+      }
+
+      &:disabled {
+        background-color: #93c5fd;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

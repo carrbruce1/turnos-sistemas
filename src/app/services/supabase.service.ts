@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  public supabase: SupabaseClient;
 
   constructor() {
     this.supabase = createClient(
@@ -15,18 +15,70 @@ export class SupabaseService {
     );
   }
 
-  // Método para guardar reservas (el que ya tenías)
+  // --- ESCUCHA EN TIEMPO REAL ---
+  escucharCambiosReservas(callback: () => void): RealtimeChannel {
+    return this.supabase
+      .channel('public:reservas')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'reservas' },
+        () => {
+          callback();
+        }
+      )
+      .subscribe();
+  }
+
+  removerCanal(channel: RealtimeChannel) {
+    this.supabase.removeChannel(channel);
+  }
+
+  // --- GESTIÓN DE RESERVAS ---
+
+  // 💡 CORREGIDO: Se agrega .select() para devolver el ID del turno recién creado
   async crearReserva(reservaData: any) {
     return await this.supabase
       .from('reservas')
-      .insert([reservaData]);
+      .insert([reservaData])
+      .select();
   }
 
-  // -------------------------------------------------------------
-  // MÉTODOS DE AUTENTICACIÓN Y PERFIL (AGREGAR ESTOS TRES):
-  // -------------------------------------------------------------
+  async obtenerReservas() {
+    return await this.supabase
+      .from('reservas')
+      .select('*')
+      .order('fecha', { ascending: true });
+  }
 
-  // 1. Iniciar sesión con Supabase Auth
+  async obtenerReservaPorId(id: string) {
+    return await this.supabase
+      .from('reservas')
+      .select('*')
+      .eq('id', id)
+      .single();
+  }
+
+  async actualizarEstadoReserva(id: string | number, nuevoEstado: string) {
+    return await this.supabase
+      .from('reservas')
+      .update({ estado: nuevoEstado })
+      .eq('id', id)
+      .select();
+  }
+
+  async asignarEmpleadoATurno(idTurno: string | number, idEmpleado: string, nuevoEstado: string) {
+    return await this.supabase
+      .from('reservas')
+      .update({ 
+        empleados_id: String(idEmpleado), 
+        estado: nuevoEstado 
+      })
+      .eq('id', idTurno)
+      .select();
+  }
+
+  // --- AUTENTICACIÓN Y PERFILES ---
+
   async login(email: string, password: string) {
     return await this.supabase.auth.signInWithPassword({
       email,
@@ -34,13 +86,11 @@ export class SupabaseService {
     });
   }
 
-  // 2. Obtener la sesión actual del usuario
   async obtenerSesion() {
     const { data } = await this.supabase.auth.getSession();
     return data.session;
   }
 
-  // 3. Obtener el perfil del usuario logueado (para saber si es 'admin' o 'empleado')
   async obtenerPerfilUsuario() {
     const { data: { user } } = await this.supabase.auth.getUser();
     
@@ -57,11 +107,48 @@ export class SupabaseService {
       return null;
     }
 
-    return data; // Retorna el objeto { id, nombre, rol, ... }
+    return data; 
   }
 
-  // 4. Cerrar sesión
   async logout() {
     return await this.supabase.auth.signOut();
+  }
+
+  async obtenerEmpleados() {
+    return await this.supabase
+      .from('perfiles')
+      .select('id, nombre, rol')
+      .eq('rol', 'empleado');
+  }
+
+  async crearNuevoEmpleado(datos: { nombre: string; email: string; password?: string; rol: string }) {
+    const tempSupabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseKey,
+      { auth: { persistSession: false } }
+    );
+
+    const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+      email: datos.email.trim(),
+      password: datos.password || '123456'
+    });
+
+    if (authError) return { error: authError };
+
+    if (authData.user) {
+      const { error: profileError } = await this.supabase
+        .from('perfiles')
+        .insert([
+          {
+            id: authData.user.id,
+            nombre: datos.nombre,
+            rol: datos.rol
+          }
+        ]);
+
+      return { error: profileError };
+    }
+
+    return { error: new Error('No se pudo crear el usuario') };
   }
 }

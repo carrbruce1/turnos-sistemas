@@ -1,0 +1,31 @@
+<div class="cancelar-container">
+  <div class="cancelar-card">
+    <h2>Cancelar Turno</h2>
+
+    @if (cargando) {
+      <p class="estado-text">Cargando la información de tu turno...</p>
+    } @else if (errorMensaje) {
+      <p class="error-msg">{{ errorMensaje }}</p>
+    } @else if (canceladoConExito) {
+      <div class="exito-box">
+        <h3>🎉 Tu turno ha sido cancelado</h3>
+        <p>El horario quedó libre nuevamente. ¡Gracias por avisarnos!</p>
+      </div>
+    } @else {
+      <div class="turno-info">
+        <p><strong>Cliente:</strong> {{ turno.nombre_cliente }}</p>
+        <p><strong>Servicio:</strong> {{ turno.servicio }}</p>
+        <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+      </div>
+
+      <p class="pregunta">¿Estás seguro de que deseas cancelar esta reserva?</p>
+
+      <button 
+        class="btn-confirmar-cancelacion" 
+        [disabled]="procesando" 
+        (click)="confirmarCancelacion()">
+        {{ procesando ? 'CANCELANDO...' : 'SÍ, CANCELAR MI TURNO' }}
+      </button>
+    }
+  </div>
+</div>

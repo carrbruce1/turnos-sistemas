@@ -50,7 +50,7 @@ export class SupabaseService {
       .order('fecha', { ascending: true });
   }
 
-  async obtenerReservaPorId(id: string) {
+  async obtenerReservaPorId(id: string | number) {
     return await this.supabase
       .from('reservas')
       .select('*')
@@ -153,7 +153,7 @@ export class SupabaseService {
   }
 
 
-async cancelarReserva(id: string) {
+async cancelarReserva(id: string | number) {
   return await this.supabase
     .from('reservas')
     .update({ estado: 'cancelado' })

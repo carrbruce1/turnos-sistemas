@@ -151,4 +151,12 @@ export class SupabaseService {
 
     return { error: new Error('No se pudo crear el usuario') };
   }
+
+
+async cancelarReserva(id: string) {
+  return await this.supabase
+    .from('reservas')
+    .update({ estado: 'cancelado' })
+    .eq('id', id);
+}
 }

@@ -1,31 +1,54 @@
-<div class="cancelar-container">
-  <div class="cancelar-card">
+<main class="cancelar-container">
+  <div class="card-cancelar">
     <h2>Cancelar Turno</h2>
 
     @if (cargando) {
-      <p class="estado-text">Cargando la información de tu turno...</p>
+      <div class="loader">
+        <p>Cargando la información de tu turno...</p>
+      </div>
     } @else if (errorMensaje) {
-      <p class="error-msg">{{ errorMensaje }}</p>
-    } @else if (canceladoConExito) {
-      <div class="exito-box">
-        <h3>🎉 Tu turno ha sido cancelado</h3>
-        <p>El horario quedó libre nuevamente. ¡Gracias por avisarnos!</p>
+      <div class="mensaje-box error">
+        <p>{{ errorMensaje }}</p>
+        <a routerLink="/" class="btn-volver">Volver al inicio</a>
       </div>
-    } @else {
-      <div class="turno-info">
-        <p><strong>Cliente:</strong> {{ turno.nombre_cliente }}</p>
-        <p><strong>Servicio:</strong> {{ turno.servicio }}</p>
-        <p><strong>Fecha/Hora:</strong> {{ turno.fecha }} - {{ turno.hora }}</p>
+    } @else if (mensajeExito) {
+      <div class="mensaje-box exito">
+        <h3>¡Tu turno ha sido cancelado!</h3>
+        <p>El horario ha quedado libre. Gracias por avisarnos.</p>
+        <a routerLink="/" class="btn-volver">Volver al inicio</a>
       </div>
+    } @else if (turno) {
 
-      <p class="pregunta">¿Estás seguro de que deseas cancelar esta reserva?</p>
+      @if (turno.estado === 'cancelado' || turno.estado === 'rechazado') {
+        <div class="mensaje-box aviso">
+          <p>Este turno ya se encuentra <strong>{{ turno.estado }}</strong>.</p>
+          <a routerLink="/" class="btn-volver">Volver al inicio</a>
+        </div>
+      } @else {
+        <div class="detalle-turno">
+          <p>¿Estás seguro de que deseas cancelar la siguiente reserva?</p>
+          
+          <div class="info-grid">
+            <p><strong>Cliente:</strong> {{ turno.nombre_cliente }}</p>
+            <p><strong>Servicio:</strong> {{ turno.servicio }}</p>
+            <p><strong>Fecha:</strong> {{ formatearFechaLatina(turno.fecha) }}</p>
+            <p><strong>Hora:</strong> {{ turno.hora }} hs</p>
+          </div>
 
-      <button 
-        class="btn-confirmar-cancelacion" 
-        [disabled]="procesando" 
-        (click)="confirmarCancelacion()">
-        {{ procesando ? 'CANCELANDO...' : 'SÍ, CANCELAR MI TURNO' }}
-      </button>
+          <div class="acciones">
+            <button 
+              type="button" 
+              class="btn-cancelar" 
+              [disabled]="procesando" 
+              (click)="confirmarCancelacion()">
+              {{ procesando ? 'CANCELANDO...' : 'CONFIRMAR CANCELACIÓN' }}
+            </button>
+            
+            <a routerLink="/" class="btn-secundario">Conservar Turno</a>
+          </div>
+        </div>
+      }
+
     }
   </div>
-</div>
+</main>

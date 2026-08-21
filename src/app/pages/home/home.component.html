@@ -14,7 +14,7 @@
 <main>
   <section class="hero-contenido">
     <div class="hero-overlay">
-      <h1>TODAVIA NO RESERVASTE UN TURNO?</h1>
+      <h1>¿TODAVÍA NO RESERVASTE UN TURNO?</h1>
       <a href="#formulario-info" class="btn-reservar">RESERVAR</a>
     </div>
   </section>
@@ -52,23 +52,54 @@
             }
           </div>
 
+          <!-- SELECTOR DE SERVICIOS EN CARDS -->
           <div class="form-group">
-            <label for="servicio">SERVICIO</label>
-            <select id="servicio" formControlName="servicio">
-              <option value="" disabled selected>Selecciona un servicio</option>
-              <option value="corte de pelo">Corte de pelo</option>
-              <option value="corte de barba">Corte de barba</option>
-              <option value="corte de pelo y barba">Corte de pelo y barba</option>
-            </select>
+            <label>ELEGÍ TU SERVICIO</label>
+            
+            <div class="servicios-grid">
+              <div 
+                class="servicio-card" 
+                [class.selected]="f('servicio')?.value === 'corte de pelo'"
+                (click)="seleccionarServicio('corte de pelo')">
+                <div class="servicio-icon">
+                  <img src="iconos/tijeras.png" alt="Corte de pelo">
+                </div>
+                <div class="servicio-textos">
+                  <strong>Corte de Pelo</strong>
+                  <small>Corte clásico o moderno</small>
+                </div>
+              </div>
+
+              <div 
+                class="servicio-card" 
+                [class.selected]="f('servicio')?.value === 'corte de barba'"
+                (click)="seleccionarServicio('corte de barba')">
+                <div class="servicio-icon">
+                  <img src="iconos/afeitar.png" alt="Corte de barba">
+                </div>
+                <div class="servicio-textos">
+                  <strong>Corte de Barba</strong>
+                  <small>Perfilado y arreglo</small>
+                </div>
+              </div>
+
+              <div 
+                class="servicio-card" 
+                [class.selected]="f('servicio')?.value === 'corte de pelo y barba'"
+                (click)="seleccionarServicio('corte de pelo y barba')">
+                <div class="servicio-icon">
+                  <img src="iconos/poste-de-barbero.png" alt="Pelo y barba">
+                </div>
+                <div class="servicio-textos">
+                  <strong>Pelo + Barba</strong>
+                  <small>Combo completo San Lorenzo</small>
+                </div>
+              </div>
+            </div>
+
             @if (f('servicio')?.invalid && f('servicio')?.touched) {
               <span class="error-msg">Debes seleccionar un servicio.</span>
             }
-          </div>
-
-          <!-- DETALLE DEL TURNO SELECCIONADO -->
-          <div class="resumen-turno">
-            <p><strong>Fecha:</strong> {{ formatearFechaLatina(reservaForm.get('fecha')?.value) || 'No seleccionada' }}</p>
-            <p><strong>Hora:</strong> {{ reservaForm.get('hora')?.value || 'No seleccionada' }}</p>
           </div>
         </div>
 

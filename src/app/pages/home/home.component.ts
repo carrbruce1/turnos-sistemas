@@ -81,6 +81,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  // MÉTODO PARA SELECCIONAR SERVICIO DESDE LAS CARDS
+  seleccionarServicio(servicio: string) {
+    this.reservaForm.patchValue({ servicio });
+    this.reservaForm.get('servicio')?.markAsTouched();
+  }
+
   suscribirACambiosRealtime() {
     this.reservasSubscription = this.supabaseService.escucharCambiosReservas(async () => {
       await this.cargarReservasDesdeSupabase();

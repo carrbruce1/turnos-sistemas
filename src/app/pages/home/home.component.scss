@@ -1,4 +1,14 @@
-/* --- ESTILOS GENERALES Y LAYOUT --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden; // Evita el scroll horizontal
+}
+
 header {
   width: 100%;
   background: #f4f4f4;
@@ -70,8 +80,8 @@ header {
   .container-reserva .form-card-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
+    gap: 30px;
+    align-items: stretch; // Alinea ambas cards a la misma altura
     @media (max-width: 850px) { grid-template-columns: 1fr; }
   }
 }
@@ -82,9 +92,11 @@ header {
   color: #111;
   padding: 35px 30px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
 
   h2, h3 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin-bottom: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -96,9 +108,6 @@ header {
 
 /* --- FORMULARIO Y CAMPOS --- */
 .form-card {
-  display: flex;
-  flex-direction: column;
-
   .form-group {
     display: flex;
     flex-direction: column;
@@ -118,25 +127,24 @@ header {
     }
     select { cursor: pointer; }
   }
-
-  .resumen-turno {
-    background: #e2e2e2;
-    border-left: 4px solid #111;
-    padding: 12px;
-    margin: 15px 0;
-    p { margin: 4px 0; font-size: 0.95rem; color: #111; font-weight: 500; }
-  }
 }
 
-/* BOTÓN DE ENVÍO Y MENSAJES */
-.form-actions, .form-card {
+/* BOTÓN DE ENVÍO Y ACCIONES (OCUPA AMBAS COLUMNAS Y SE CENTRA) */
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+
   .btn-submit {
     width: 100%;
-    margin-top: 10px;
+    max-width: 400px;
     background: #111;
     color: #fff;
     border: none;
-    padding: 14px;
+    padding: 16px;
     font-family: inherit;
     font-size: 1.1rem;
     font-weight: 700;
@@ -152,21 +160,81 @@ header {
 .error-msg { color: #dc2626; font-size: 0.85rem; font-weight: 500; margin-top: 4px; display: block; }
 .exito-msg { color: #16a34a; font-size: 0.95rem; font-weight: 700; margin-top: 15px; text-align: center; }
 
-/* --- CALENDARIO GOOGLE --- */
-.google-appointment-container {
-  min-height: 400px;
+/* --- CARDS DE SERVICIOS --- */
+.servicios-grid {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
 
+.servicio-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+  }
+
+  &.selected {
+    border: 1.5px solid #c59b27;
+    background-color: #f7f3e8;
+  }
+
+  .servicio-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .servicio-textos {
+    display: flex;
+    flex-direction: column;
+
+    strong {
+      font-size: 0.95rem;
+      color: #111111;
+      font-weight: 700;
+    }
+
+    small {
+      font-size: 0.8rem;
+      color: #444444;
+      font-weight: 500;
+    }
+  }
+}
+
+/* --- CALENDARIO GOOGLE --- */
+.google-appointment-container {
   .appointment-body {
     display: flex;
-    gap: 24px;
-    @media (max-width: 768px) { flex-direction: column; }
+    gap: 20px;
+    height: 100%;
+    align-items: flex-start;
+    @media (max-width: 768px) { flex-direction: column; align-items: center; }
   }
 
   /* MINI CALENDARIO */
   .mini-calendar {
-    width: 220px;
+    width: 210px;
     flex-shrink: 0;
 
     .calendar-nav {
@@ -174,7 +242,7 @@ header {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      .month-label { font-weight: 700; font-size: 1rem; text-transform: uppercase; }
+      .month-label { font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
       .nav-btns button { background: none; border: none; cursor: pointer; padding: 4px 8px; font-size: 1.1rem; color: #111; font-weight: bold; &:hover { opacity: 0.6; } }
     }
 
@@ -183,6 +251,8 @@ header {
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
       text-align: center;
+      justify-items: center;
+
       .day-header { font-size: 0.8rem; color: #666; font-weight: 700; }
       .day-cell {
         background: none; border: none; height: 28px; width: 28px; border-radius: 50%;
@@ -198,31 +268,33 @@ header {
   /* HORARIOS */
   .weekly-slots {
     flex-grow: 1;
+    width: 100%;
+
     .week-nav {
-      display: flex; gap: 8px; margin-bottom: 12px;
+      display: flex; gap: 8px; margin-bottom: 12px; justify-content: flex-end;
       button { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: #111; font-weight: bold; &:hover { opacity: 0.6; } }
     }
 
     .week-columns {
-      display: flex; justify-content: space-between;
+      display: flex; justify-content: space-between; gap: 4px;
       .day-column {
-        display: flex; flex-direction: column; align-items: center; width: 18%;
+        display: flex; flex-direction: column; align-items: center; width: 19%;
         .col-header {
-          display: flex; flex-direction: column; align-items: center; margin-bottom: 16px;
-          .day-name { font-size: 0.8rem; color: #666; font-weight: 700; text-transform: uppercase; }
+          display: flex; flex-direction: column; align-items: center; margin-bottom: 12px;
+          .day-name { font-size: 0.75rem; color: #666; font-weight: 700; text-transform: uppercase; }
           .day-num-circle {
-            font-size: 1.1rem; font-weight: 700; margin-top: 4px; width: 34px; height: 34px;
+            font-size: 1rem; font-weight: 700; margin-top: 4px; width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #111;
           }
           &.active .day-num-circle { background: #111; color: #fff; }
         }
 
         .slots-list {
-          display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;
-          .slot-dash { color: #bbb; font-weight: bold; height: 34px; display: flex; align-items: center; }
+          display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%;
+          .slot-dash { color: #bbb; font-weight: bold; height: 32px; display: flex; align-items: center; }
           .time-pill {
-            border: 1px solid #111; background: #fff; color: #111; padding: 6px 4px;
-            font-family: inherit; font-weight: 500; font-size: 0.9rem; cursor: pointer; width: 100%; text-align: center; transition: all 0.2s;
+            border: 1px solid #111; background: #fff; color: #111; padding: 6px 2px;
+            font-family: inherit; font-weight: 500; font-size: 0.85rem; cursor: pointer; width: 100%; text-align: center; transition: all 0.2s;
             &:hover { background: #e2e2e2; }
             &.active { background: #111; color: #fff; font-weight: 700; }
           }
@@ -291,68 +363,6 @@ header {
       &:active { transform: translateY(0); }
     }
     .btn-reintentar { background: #dc3545; &:hover { background: #bd2130; } }
-  }
-}
-
-.servicios-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.servicio-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: #f5f5f5;
-    border-color: #ccc;
-  }
-
-  &.selected {
-    border: 1.5px solid #c59b27; // Tu borde dorado
-    background-color: #f7f3e8;   // Fondo suave dorado
-  }
-
-  // Acomodado para las imágenes PNG/SVG
-  .servicio-icon {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-  }
-
-  .servicio-textos {
-    display: flex;
-    flex-direction: column;
-
-    strong {
-      font-size: 0.95rem;
-      color: #111111; // Texto principal bien negro
-      font-weight: 700;
-    }
-
-    small {
-      font-size: 0.8rem;
-      color: #444444; // Texto secundario oscuro
-      font-weight: 500;
-    }
   }
 }
 

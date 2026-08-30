@@ -700,3 +700,11 @@ header {
     }
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+#formulario-info {
+  scroll-margin-top: 80px;
+}

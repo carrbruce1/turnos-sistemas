@@ -200,7 +200,7 @@ export class AdminComponent implements OnInit {
                     `🔹 *Servicio:* ${turno.servicio || 'Corte'}\n` +
                     `📅 *Fecha:* ${fechaFormateada}\n` +
                     `⏰ *Hora:* ${turno.hora} hs\n\n` +
-                    `📍 Te esperamos en nuestro local. Si necesitás reprogramar o cancelar, por favor avisanos con anticipación. ¡Muchas gracias!`;
+                    `📍 Te esperamos en nuestro local. Si necesitás reprogramar o cancelar, por favor avisanos con 24 horas de anticipación. ¡Muchas gracias!`;
 
     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');

@@ -15,7 +15,7 @@
   <section class="hero-contenido">
     <div class="hero-overlay">
       <h1>¿TODAVÍA NO RESERVASTE UN TURNO?</h1>
-      <a href="#formulario-info" class="btn-reservar">RESERVAR</a>
+      <a href="javascript:void(0)" (click)="scrollToFormulario()" class="btn-reservar">RESERVAR</a>
     </div>
   </section>
 
@@ -24,7 +24,6 @@
       
       <form class="form-card-container" [formGroup]="reservaForm" (ngSubmit)="onSubmit()">
         
-        <!-- CARD IZQUIERDA: FORMULARIO DE DATOS -->
         <div class="form-card">
           <h2>TUS DATOS DE RESERVA</h2>
 
@@ -52,7 +51,6 @@
             }
           </div>
 
-          <!-- SELECTOR DE SERVICIOS EN CARDS -->
           <div class="form-group">
             <label>ELEGÍ TU SERVICIO</label>
             
@@ -103,7 +101,6 @@
           </div>
         </div>
 
-        <!-- CARD DERECHA: SELECTOR DE APPOINTMENTS -->
         <div class="google-appointment-container">
           <div class="appointment-header">
             <h3>Selecciona un horario para la cita</h3>
@@ -111,7 +108,6 @@
 
           <div class="appointment-body">
             
-            <!-- COLUMNA 1: MINI CALENDARIO MENSUAL -->
             <div class="mini-calendar">
               <div class="calendar-nav">
                 <span class="month-label">{{ nombreMesActual }}</span>
@@ -144,7 +140,6 @@
               </div>
             </div>
 
-            <!-- COLUMNA 2: HORARIOS DE LA SEMANA -->
             <div class="weekly-slots">
               <div class="week-nav">
                 <button type="button" (click)="cambiarSemana(-1)">&lt;</button>
@@ -182,7 +177,6 @@
           </div>
         </div>
 
-        <!-- SECCIÓN INFERIOR: BOTÓN Y MENSAJES DE ACCIÓN -->
         <div class="form-actions">
           <button type="submit" class="btn-submit" [disabled]="cargando || reservaForm.invalid">
             {{ cargando ? 'ENVIANDO...' : 'CONFIRMAR RESERVA' }}
@@ -199,7 +193,6 @@
   </section>
 </main>
 
-<!-- MODAL DE CONFIRMACIÓN -->
 @if (mostrarModal) {
   <div class="modal-overlay">
     <div class="modal-card">

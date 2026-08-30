@@ -81,6 +81,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  // MÉTODO PARA EL SCROLL SUAVE AL FORMULARIO EN MÓVILES
+  scrollToFormulario() {
+    const el = document.getElementById('formulario-info');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   // MÉTODO PARA SELECCIONAR SERVICIO DESDE LAS CARDS
   seleccionarServicio(servicio: string) {
     this.reservaForm.patchValue({ servicio });

@@ -64,6 +64,7 @@ header {
     }
   }
 }
+
 /* --- HERO SECTION --- */
 .hero-contenido {
   position: relative;
@@ -72,7 +73,6 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Imagen de barbería en alto contraste */
   background: linear-gradient(180deg, rgba(13, 13, 13, 0.5) 0%, rgba(13, 13, 13, 0.95) 100%),
               url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
   text-align: center;
@@ -106,6 +106,7 @@ header {
       text-transform: uppercase;
       text-decoration: none;
       border: 1px solid $accent-cream;
+      cursor: pointer;
       transition: all 0.3s ease;
 
       &:hover {
@@ -122,6 +123,7 @@ header {
   padding: 80px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  scroll-margin-top: 70px; // Compensación para que el header sticky no tape el inicio del formulario
 
   .container-reserva {
     width: 100%;
@@ -134,7 +136,7 @@ header {
     align-items: start;
 
     @media (max-width: 992px) {
-      grid-template-columns: 1fr; // Pasa a 1 sola columna en tablets/mobile
+      grid-template-columns: 1fr;
       gap: 40px;
     }
   }
@@ -234,7 +236,7 @@ header {
       .servicio-icon img {
         width: 32px;
         height: 32px;
-        filter: invert(1); // Iconos en blanco
+        filter: invert(1);
         opacity: 0.8;
       }
 
@@ -699,12 +701,4 @@ header {
       }
     }
   }
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-#formulario-info {
-  scroll-margin-top: 80px;
 }

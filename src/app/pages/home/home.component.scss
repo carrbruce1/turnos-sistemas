@@ -12,10 +12,6 @@ $font-serif: 'Cormorant Garamond', Georgia, serif;
 $font-sans: 'Montserrat', system-ui, sans-serif;
 
 /* --- RESET Y BASE CONTENEDOR --- */
-html {
-  scroll-behavior: smooth;
-}
-
 :host {
   display: block;
   background-color: $bg-dark;

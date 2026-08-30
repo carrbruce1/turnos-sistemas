@@ -81,14 +81,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  // MÉTODO PARA EL SCROLL SUAVE EN COMPATIBILIDAD CON MÓVILES
+  // MÉTODO ORIGINAL DE SCROLL CON TIMEOUT PARA MÓVILES
   scrollToFormulario() {
-    const el = document.getElementById('formulario-info');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.location.hash = 'formulario-info';
-    }
+    setTimeout(() => {
+      const el = document.getElementById('formulario-info');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   }
 
   // MÉTODO PARA SELECCIONAR SERVICIO DESDE LAS CARDS

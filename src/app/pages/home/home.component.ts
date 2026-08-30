@@ -81,11 +81,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  // MÉTODO PARA EL SCROLL SUAVE AL FORMULARIO EN MÓVILES
+  // MÉTODO PARA EL SCROLL SUAVE EN COMPATIBILIDAD CON MÓVILES
   scrollToFormulario() {
     const el = document.getElementById('formulario-info');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.location.hash = 'formulario-info';
     }
   }
 

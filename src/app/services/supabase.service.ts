@@ -35,12 +35,11 @@ export class SupabaseService {
 
   // --- GESTIÓN DE RESERVAS ---
 
-  // 💡 CORREGIDO: Se agrega .select() para devolver el ID del turno recién creado
+  // 💡 CORREGIDO: Se elimina el .select() para evitar bloqueos por RLS/lectura anónima en celulares
   async crearReserva(reservaData: any) {
     return await this.supabase
       .from('reservas')
-      .insert([reservaData])
-      .select();
+      .insert([reservaData]);
   }
 
   async obtenerReservas() {
@@ -152,11 +151,10 @@ export class SupabaseService {
     return { error: new Error('No se pudo crear el usuario') };
   }
 
-
-async cancelarReserva(id: string | number) {
-  return await this.supabase
-    .from('reservas')
-    .update({ estado: 'cancelado' })
-    .eq('id', id);
-}
+  async cancelarReserva(id: string | number) {
+    return await this.supabase
+      .from('reservas')
+      .update({ estado: 'cancelado' })
+      .eq('id', id);
+  }
 }

@@ -24,6 +24,7 @@
       
       <form class="form-card-container" [formGroup]="reservaForm" (ngSubmit)="onSubmit()">
         
+        <!-- CARD IZQUIERDA: FORMULARIO DE DATOS -->
         <div class="form-card">
           <h2>TUS DATOS DE RESERVA</h2>
 
@@ -51,6 +52,7 @@
             }
           </div>
 
+          <!-- SELECTOR DE SERVICIOS EN CARDS -->
           <div class="form-group">
             <label>ELEGÍ TU SERVICIO</label>
             
@@ -101,6 +103,7 @@
           </div>
         </div>
 
+        <!-- CARD DERECHA: SELECTOR DE APPOINTMENTS -->
         <div class="google-appointment-container">
           <div class="appointment-header">
             <h3>Selecciona un horario para la cita</h3>
@@ -108,6 +111,7 @@
 
           <div class="appointment-body">
             
+            <!-- COLUMNA 1: MINI CALENDARIO MENSUAL -->
             <div class="mini-calendar">
               <div class="calendar-nav">
                 <span class="month-label">{{ nombreMesActual }}</span>
@@ -140,6 +144,7 @@
               </div>
             </div>
 
+            <!-- COLUMNA 2: HORARIOS DE LA SEMANA -->
             <div class="weekly-slots">
               <div class="week-nav">
                 <button type="button" (click)="cambiarSemana(-1)">&lt;</button>
@@ -177,14 +182,11 @@
           </div>
         </div>
 
+        <!-- SECCIÓN INFERIOR: BOTÓN PRINCIPAL -->
         <div class="form-actions">
           <button type="submit" class="btn-submit" [disabled]="cargando || reservaForm.invalid">
             {{ cargando ? 'ENVIANDO...' : 'CONFIRMAR RESERVA' }}
           </button>
-
-          @if (mensajeExito) {
-            <p class="exito-msg">¡Reserva registrada con éxito!</p>
-          }
         </div>
 
       </form>
@@ -193,6 +195,7 @@
   </section>
 </main>
 
+<!-- MODAL DE CONFIRMACIÓN DE RESERVA -->
 @if (mostrarModal) {
   <div class="modal-overlay">
     <div class="modal-card">
@@ -201,7 +204,7 @@
         <div class="modal-body">
           <div class="spinner"></div>
           <h3>Procesando tu reserva...</h3>
-          <p>Por favor aguardá un segundo.</p>
+          <p>Por favor aguardá un segundo mientras confirmamos la disponibilidad.</p>
         </div>
       }
 
@@ -209,13 +212,19 @@
         <div class="modal-body">
           <div class="icon-circle exito-icon">✓</div>
           <h2>¡Reserva Confirmada!</h2>
-          <p>Gracias <strong>{{ resumenReservaModal.nombre_cliente }}</strong>, registramos tu solicitud.</p>
+          
+          <!-- MENSAJE PERSONALIZADO PARA EL CLIENTE -->
+          <p class="mensaje-cliente">
+            ¡Hola <strong>{{ resumenReservaModal.nombre_cliente }}</strong>! Tu turno fue agendado correctamente.
+          </p>
           
           <div class="resumen-confirmacion">
             <p><strong>Servicio:</strong> {{ resumenReservaModal.servicio }}</p>
             <p><strong>Fecha:</strong> {{ resumenReservaModal.fechaFormateada }}</p>
             <p><strong>Hora:</strong> {{ resumenReservaModal.hora }} hs</p>
           </div>
+
+          <p class="nota-adicional">Te esperamos en el local. Si necesitas cancelar, por favor avisarnos con anticipación.</p>
 
           <button type="button" class="btn-aceptar" (click)="cerrarModal()">Aceptar</button>
         </div>
@@ -224,10 +233,10 @@
       @if (tipoModal === 'error') {
         <div class="modal-body">
           <div class="icon-circle error-icon">✕</div>
-          <h2>Ocurrió un error</h2>
-          <p>No se pudo registrar la reserva. Por favor intentá de nuevo.</p>
+          <h2>No pudimos procesar tu reserva</h2>
+          <p>Ocurrió un problema de conexión o el horario ya fue ocupado. Por favor intentá nuevamente.</p>
 
-          <button type="button" class="btn-reintentar" (click)="cerrarModal()">Entendido</button>
+          <button type="button" class="btn-reintentar" (click)="cerrarModal()">Reintentar</button>
         </div>
       }
 

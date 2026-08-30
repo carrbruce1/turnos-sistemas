@@ -12,6 +12,10 @@ $font-serif: 'Cormorant Garamond', Georgia, serif;
 $font-sans: 'Montserrat', system-ui, sans-serif;
 
 /* --- RESET Y BASE CONTENEDOR --- */
+html {
+  scroll-behavior: smooth;
+}
+
 :host {
   display: block;
   background-color: $bg-dark;
@@ -123,7 +127,6 @@ header {
   padding: 80px 20px;
   max-width: 1200px;
   margin: 0 auto;
-  scroll-margin-top: 70px; // Compensación para que el header sticky no tape el inicio del formulario
 
   .container-reserva {
     width: 100%;

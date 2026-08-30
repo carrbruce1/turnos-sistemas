@@ -287,7 +287,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     try {
-      const { error } = await this.supabaseService.crearReserva(nuevaReserva);
+      // Timeout de 8s para evitar que el spinner en celulares quede congelado si se cuelga la red
+      const promesaCrear = this.supabaseService.crearReserva(nuevaReserva);
+      const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout de red')), 8000)
+      );
+
+      const resultado: any = await Promise.race([promesaCrear, timeout]);
+      const error = resultado?.error;
+
       if (error) throw error;
 
       this.mensajeExito = true;

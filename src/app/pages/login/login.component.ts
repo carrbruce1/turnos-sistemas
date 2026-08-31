@@ -72,7 +72,7 @@ export class LoginComponent {
         if (perfil?.rol === 'admin') {
           await this.router.navigate(['/admin']);
         } else if (perfil?.rol === 'empleado') {
-          await this.router.navigate(['/empleados']);
+          await this.router.navigate(['/admin']);
         } else {
           await this.router.navigate(['/home']);
         }

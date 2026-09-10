@@ -22,7 +22,14 @@
   </aside>
 
   <main class="main-content">
-    <h2>Hola {{ nombreUsuario }}</h2>
+    <div class="header-bienvenida">
+      <h2>Hola {{ nombreUsuario }}</h2>
+      @if (nombreBarberia) {
+        <span class="badge-barberia">
+          {{ nombreBarberia }}
+        </span>
+      }
+    </div>
 
     <!-- BARRA DE BÚSQUEDA -->
     <div class="search-bar-container">
@@ -57,7 +64,8 @@
               <div class="turno-info">
                 <p><strong>Cliente:</strong> {{ turno.nombre_cliente || 'Sin Nombre' }}</p>
                 <p><strong>Servicio:</strong> {{ turno.servicio || 'Sin servicio' }}</p>
-                <p><strong>Fecha/Hora:</strong> {{ formatearFechaLatina(turno.fecha) }} - {{ turno.hora }} hs</p>
+                <p><strong>Fecha:</strong> {{ formatearFechaLarga(turno.fecha) }}</p>
+                <p><strong>Hora:</strong> {{ turno.hora }} hs</p>
                 <p><strong>Estado:</strong> 
                   <span class="badge" [ngClass]="turno.estado">{{ turno.estado | uppercase }}</span>
                 </p>

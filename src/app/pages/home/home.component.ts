@@ -65,24 +65,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     hora: ['', [Validators.required]]
   });
 
-ngOnInit() {
-  this.route.paramMap.subscribe(async (params) => {
-    const idParam = params.get('id');
-    
-    // Si viene un ID numérico en la URL, lo usa. Si no, usa el 1 por defecto.
-    if (idParam && !isNaN(Number(idParam))) {
-      this.localId = Number(idParam);
-    } else {
-      this.localId = 1;
-    }
+  ngOnInit() {
+    this.route.paramMap.subscribe(async (params) => {
+      const idParam = params.get('id');
+      
+      // Si viene un ID numérico en la URL, lo usa. Si no, usa el 1 por defecto.
+      if (idParam && !isNaN(Number(idParam))) {
+        this.localId = Number(idParam);
+      } else {
+        this.localId = 1;
+      }
 
-    this.actualizarNombreMes();
-    this.construirVistaSemanal();
-    await this.cargarDatosDeSupabase();
+      this.actualizarNombreMes();
+      this.construirVistaSemanal();
+      await this.cargarDatosDeSupabase();
 
-    this.cdr.detectChanges();
-  });
-}
+      this.cdr.detectChanges();
+    });
+  }
 
   ngOnDestroy() {
     if (this.reservasSubscription) {
@@ -175,6 +175,25 @@ ngOnInit() {
     const partes = fechaStr.split('-');
     if (partes.length !== 3) return fechaStr;
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
+  }
+
+  // NUEVO MÉTODO: Formatea "2026-09-11" a "Viernes 11 de Septiembre"
+  formatearFechaLarga(fechaStr: string): string {
+    if (!fechaStr) return '';
+    
+    // Forzamos hora local agregando T00:00:00 para evitar desfases de zona horaria UTC
+    const fecha = new Date(fechaStr.includes('T') ? fechaStr : `${fechaStr}T00:00:00`);
+    
+    if (isNaN(fecha.getTime())) return fechaStr;
+
+    const opciones: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    };
+
+    const texto = fecha.toLocaleDateString('es-ES', opciones);
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 
   esSlotPasado(fechaStr: string, horaStr: string): boolean {
@@ -288,7 +307,7 @@ ngOnInit() {
       this.resumenReservaModal = {
         nombre_cliente: nuevaReserva.nombre_cliente,
         servicio: nuevaReserva.servicio,
-        fechaFormateada: this.formatearFechaLatina(nuevaReserva.fecha),
+        fechaFormateada: this.formatearFechaLarga(nuevaReserva.fecha), // <-- Usamos la nueva función acá
         hora: nuevaReserva.hora
       };
 

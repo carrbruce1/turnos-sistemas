@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
-
-interface DiaMes {
-  numero: number;
-  fechaStr: string;
-  esDelMes: boolean;
-  deshabilitado?: boolean;
-}
 
 interface SlotHora {
   hora: string;
@@ -32,6 +26,12 @@ interface DiaSemanaVista {
 export class HomeComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private supabaseService = inject(SupabaseService);
+  private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
+
+  localData: any = null;
+  localId: number = 1; // Fallback por defecto
+  cargandoLocal = false;
 
   cargando = false;
   mostrarModal: boolean = false;
@@ -44,14 +44,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
   mensajeExito = false;
-
   horariosHabituales: string[] = ['09:00', '10:00', '11:00', '16:00', '17:00', '18:00', '19:00'];
 
   fechaActualNavegacion = new Date();
   fechaSeleccionadaStr = this.formatearFechaISO(new Date());
   horaSeleccionada: string | null = null;
 
-  diasMes: DiaMes[] = [];
   diasSemanaVista: DiaSemanaVista[] = [];
   nombreMesActual = '';
 
@@ -67,13 +65,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     hora: ['', [Validators.required]]
   });
 
-  async ngOnInit() {
-    this.construirMiniCalendario();
+ngOnInit() {
+  this.route.paramMap.subscribe(async (params) => {
+    const idParam = params.get('id');
+    
+    // Si viene un ID numérico en la URL, lo usa. Si no, usa el 1 por defecto.
+    if (idParam && !isNaN(Number(idParam))) {
+      this.localId = Number(idParam);
+    } else {
+      this.localId = 1;
+    }
+
+    this.actualizarNombreMes();
     this.construirVistaSemanal();
-    await this.cargarReservasDesdeSupabase();
-    this.construirVistaSemanal();
-    this.suscribirACambiosRealtime();
-  }
+    await this.cargarDatosDeSupabase();
+
+    this.cdr.detectChanges();
+  });
+}
 
   ngOnDestroy() {
     if (this.reservasSubscription) {
@@ -81,7 +90,36 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  // MÉTODO ORIGINAL DE SCROLL CON TIMEOUT PARA MÓVILES
+  async cargarDatosDeSupabase() {
+    try {
+      this.cargandoLocal = true;
+      const data = await this.supabaseService.obtenerLocalPorId(this.localId);
+      if (data) {
+        this.localData = data;
+      }
+    } catch (err) {
+      console.error('Error al consultar la tabla locales:', err);
+    } finally {
+      this.cargandoLocal = false;
+    }
+
+    await this.cargarReservasDesdeSupabase();
+    this.construirVistaSemanal();
+    this.suscribirACambiosRealtime();
+  }
+
+  obtenerNombreLocal(): string {
+    return this.localData?.Nombre || this.localData?.nombre || 'CARGANDO LOCAL...';
+  }
+
+  obtenerUrlBanner(): string {
+    const banner = this.localData?.banner_url || this.localData?.Banner_url;
+    if (banner && banner.trim() !== '') {
+      return banner.trim();
+    }
+    return 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1600&auto=format&fit=crop';
+  }
+
   scrollToFormulario() {
     setTimeout(() => {
       const el = document.getElementById('formulario-info');
@@ -91,7 +129,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, 50);
   }
 
-  // MÉTODO PARA SELECCIONAR SERVICIO DESDE LAS CARDS
   seleccionarServicio(servicio: string) {
     this.reservaForm.patchValue({ servicio });
     this.reservaForm.get('servicio')?.markAsTouched();
@@ -101,6 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.reservasSubscription = this.supabaseService.escucharCambiosReservas(async () => {
       await this.cargarReservasDesdeSupabase();
       this.construirVistaSemanal();
+      this.cdr.detectChanges();
     });
   }
 
@@ -110,7 +148,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async cargarReservasDesdeSupabase() {
     try {
-      const { data, error } = await this.supabaseService.obtenerReservas();
+      const res = await this.supabaseService.obtenerReservasPorLocal(this.localId);
+      const data = res.data;
+      const error = res.error;
+
       if (!error && data) {
         this.reservasExistentes = data.filter((r: any) => {
           const est = r.estado ? String(r.estado).toLowerCase().trim() : '';
@@ -136,11 +177,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
   }
 
-  esFechaPasada(fechaStr: string): boolean {
-    const hoyStr = this.formatearFechaISO(new Date());
-    return fechaStr < hoyStr;
-  }
-
   esSlotPasado(fechaStr: string, horaStr: string): boolean {
     const ahora = new Date();
     const hoyStr = this.formatearFechaISO(ahora);
@@ -159,67 +195,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  construirMiniCalendario() {
+  actualizarNombreMes() {
     const ano = this.fechaActualNavegacion.getFullYear();
     const mes = this.fechaActualNavegacion.getMonth();
-
     const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     this.nombreMesActual = `${nombresMeses[mes]} ${ano}`;
-
-    const primerDiaMes = new Date(ano, mes, 1);
-    const ultimoDiaMes = new Date(ano, mes + 1, 0);
-
-    const offsetPrimerDia = primerDiaMes.getDay();
-    const totalDias = ultimoDiaMes.getDate();
-
-    this.diasMes = [];
-
-    const diasMesAnterior = new Date(ano, mes, 0).getDate();
-    for (let i = offsetPrimerDia - 1; i >= 0; i--) {
-      const diaNum = diasMesAnterior - i;
-      const d = new Date(ano, mes - 1, diaNum);
-      const fStr = this.formatearFechaISO(d);
-      this.diasMes.push({ 
-        numero: diaNum, 
-        fechaStr: fStr, 
-        esDelMes: false,
-        deshabilitado: true 
-      });
-    }
-
-    for (let i = 1; i <= totalDias; i++) {
-      const d = new Date(ano, mes, i);
-      const fStr = this.formatearFechaISO(d);
-      this.diasMes.push({ 
-        numero: i, 
-        fechaStr: fStr, 
-        esDelMes: true,
-        deshabilitado: this.esFechaPasada(fStr)
-      });
-    }
-  }
-
-  cambiarMes(delta: number) {
-    this.fechaActualNavegacion = new Date(this.fechaActualNavegacion.getFullYear(), this.fechaActualNavegacion.getMonth() + delta, 1);
-    this.construirMiniCalendario();
-  }
-
-  seleccionarDiaMiniCal(dia: DiaMes) {
-    if (dia.deshabilitado) return;
-
-    this.fechaSeleccionadaStr = dia.fechaStr;
-    this.reservaForm.patchValue({ fecha: this.fechaSeleccionadaStr });
-    
-    const partes = dia.fechaStr.split('-');
-    this.fechaActualNavegacion = new Date(+partes[0], +partes[1] - 1, +partes[2]);
-    
-    this.construirVistaSemanal();
   }
 
   construirVistaSemanal() {
     this.diasSemanaVista = [];
     const baseDate = new Date(this.fechaActualNavegacion);
-    
     const nombresDias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
     for (let i = 0; i < 5; i++) {
@@ -247,9 +232,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  cambiarSemana(deltaDias: number) {
-    this.fechaActualNavegacion.setDate(this.fechaActualNavegacion.getDate() + (deltaDias * 5));
-    this.construirMiniCalendario();
+  cambiarSemana(delta: number) {
+    this.fechaActualNavegacion.setDate(this.fechaActualNavegacion.getDate() + (delta * 5));
+    this.actualizarNombreMes();
     this.construirVistaSemanal();
   }
 
@@ -277,6 +262,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.mensajeExito = false;
 
     const nuevaReserva = {
+      local_id: this.localId,
       nombre_cliente: this.reservaForm.value.nombre,
       telefono_cliente: this.reservaForm.value.telefono,
       email_cliente: this.reservaForm.value.email,
@@ -287,9 +273,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     try {
-      // Timeout de 8s para evitar que el spinner en celulares quede congelado si se cuelga la red
       const promesaCrear = this.supabaseService.crearReserva(nuevaReserva);
-      const timeout = new Promise((_, reject) => 
+      const timeout = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Timeout de red')), 8000)
       );
 
@@ -324,10 +309,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.tipoModal = 'error';
     } finally {
       this.cargando = false;
+      this.cdr.detectChanges();
     }
   }
 
   cerrarModal() {
     this.mostrarModal = false;
+    this.cdr.detectChanges();
   }
 }

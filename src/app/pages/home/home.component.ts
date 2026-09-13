@@ -67,18 +67,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
-      const idParam = params.get('id');
-      
-      // Si viene un ID numérico en la URL, lo usa. Si no, usa el 1 por defecto.
-      if (idParam && !isNaN(Number(idParam))) {
-        this.localId = Number(idParam);
-      } else {
-        this.localId = 1;
-      }
+      // Capturamos la variable 'slug' o la 'id' que vengan por la URL (o '1' como fallback)
+      const slugOrId = params.get('slug') || params.get('id') || '1';
 
       this.actualizarNombreMes();
       this.construirVistaSemanal();
-      await this.cargarDatosDeSupabase();
+      await this.cargarDatosDeSupabase(slugOrId);
 
       this.cdr.detectChanges();
     });
@@ -90,12 +84,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  async cargarDatosDeSupabase() {
+  async cargarDatosDeSupabase(identifier: string | number) {
     try {
       this.cargandoLocal = true;
-      const data = await this.supabaseService.obtenerLocalPorId(this.localId);
+      // Consultamos a Supabase por slug o por id
+      const data = await this.supabaseService.obtenerLocalPorSlug(identifier);
       if (data) {
         this.localData = data;
+        this.localId = data.id; // Vinculamos el ID numérico real para consultar las reservas
       }
     } catch (err) {
       console.error('Error al consultar la tabla locales:', err);
@@ -177,11 +173,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
   }
 
-  // NUEVO MÉTODO: Formatea "2026-09-11" a "Viernes 11 de Septiembre"
   formatearFechaLarga(fechaStr: string): string {
     if (!fechaStr) return '';
     
-    // Forzamos hora local agregando T00:00:00 para evitar desfases de zona horaria UTC
     const fecha = new Date(fechaStr.includes('T') ? fechaStr : `${fechaStr}T00:00:00`);
     
     if (isNaN(fecha.getTime())) return fechaStr;
@@ -307,7 +301,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.resumenReservaModal = {
         nombre_cliente: nuevaReserva.nombre_cliente,
         servicio: nuevaReserva.servicio,
-        fechaFormateada: this.formatearFechaLarga(nuevaReserva.fecha), // <-- Usamos la nueva función acá
+        fechaFormateada: this.formatearFechaLarga(nuevaReserva.fecha),
         hora: nuevaReserva.hora
       };
 

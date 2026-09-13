@@ -6,20 +6,7 @@ import { EmpleadosComponent } from './pages/empleados/empleados.component';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home/1', // Si entran a la raíz sin ID, va al local 1 por defecto
-    pathMatch: 'full',
-  },
-  {
-    path: 'home',
-    redirectTo: 'home/1',
-    pathMatch: 'full',
-  },
-  {
-    path: 'home/:id', // Capta dinámicamente CUALQUIER local de tu barbería (1, 2, 3, etc.)
-    component: HomeComponent,
-  },
+  // 1. Rutas fijas y administrativas (tienen prioridad)
   {
     path: 'login',
     component: LoginComponent,
@@ -43,8 +30,32 @@ export const routes: Routes = [
     path: 'cancelar-turno/:id',
     loadComponent: () => import('./pages/cancelar-turnos/cancelar-turnos.component').then(m => m.CancelarTurnosComponent)
   },
+
+  // 2. Compatibilidad con tus URLs anteriores
+  {
+    path: '',
+    redirectTo: 'home/1',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    redirectTo: 'home/1',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home/:id',
+    component: HomeComponent,
+  },
+
+  // 3. RUTA LIMPIA PARA EL DOMINIO: Captura turnillos.site/laovejanegra
+  {
+    path: ':slug',
+    component: HomeComponent,
+  },
+
+  // 4. Fallback de respaldo
   {
     path: '**',
-    redirectTo: 'home/1', // Si escriben una URL rota, cae al local 1 de respaldo
+    redirectTo: 'home/1',
   }
 ];

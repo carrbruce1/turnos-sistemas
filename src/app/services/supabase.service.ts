@@ -41,6 +41,25 @@ export class SupabaseService {
       .select('*');
   }
 
+  // NUEVO MÉTODO: Permite obtener el local por su slug (ej: 'laovejanegra') o id de respaldo
+  async obtenerLocalPorSlug(identifier: string | number) {
+    const esNumero = !isNaN(Number(identifier));
+    const columna = esNumero ? 'id' : 'slug';
+
+    const { data, error } = await this.supabase
+      .from('locales')
+      .select('*')
+      .eq(columna, identifier)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error al obtener el local por slug/id:', error);
+      return null;
+    }
+
+    return data;
+  }
+
   async obtenerLocalPorId(localId: string | number) {
     const { data, error } = await this.supabase
       .from('locales')
@@ -189,6 +208,4 @@ export class SupabaseService {
       .update({ estado: 'cancelado' })
       .eq('id', id);
   }
-
-  
 }
